@@ -26,7 +26,7 @@
                 </div>
                 <p>1. Our compliance team verifies your driving license and vehicle bluebook.</p>
                 <p>2. Verification usually completes within <strong>2 to 4 hours</strong>.</p>
-                <p>3. Once approved, your car is listed on Hahacar.com for direct customer bookings in {{ $serviceCity }}.</p>
+                <p>3. Once approved, your car is listed on Hahakar.com for direct customer bookings in {{ $serviceCity }}.</p>
             </div>
 
             <div class="flex flex-wrap items-center justify-center gap-4">
@@ -44,7 +44,7 @@
             <!-- Header -->
             <div class="text-center mb-8">
                 <span class="inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-3">
-                    Partner With Hahacar Nepal
+                    Partner With Hahakar Nepal
                 </span>
                 <h1 class="text-3xl font-black text-white">Register Your Vehicle & Drive</h1>
                 <p class="text-sm text-slate-400 mt-1 max-w-md mx-auto">

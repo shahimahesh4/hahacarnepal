@@ -86,7 +86,7 @@ class DirectVehicleBookingTest extends TestCase
 
         $booking = Booking::where('customer_phone', '+977 9811223344')->first();
         $this->assertNotNull($booking);
-        $this->assertStringStartsWith('HHC-BK-', $booking->booking_reference);
+        $this->assertStringStartsWith('HHK-BK-', $booking->booking_reference);
 
         $voucherResponse = $this->get("/booking/{$booking->booking_reference}");
         $voucherResponse->assertStatus(200);

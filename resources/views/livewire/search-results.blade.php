@@ -310,7 +310,7 @@
                                 <!-- Vehicle Image & Category -->
                                 <div class="md:col-span-4 flex flex-col items-center justify-center text-center">
                                     <div class="w-full aspect-16/10 flex items-center justify-center bg-gradient-to-br from-slate-50 via-slate-100/60 to-slate-50 border border-slate-200/80 rounded-2xl p-3.5 mb-3 shadow-2xs overflow-hidden">
-                                        <img src="{{ $offer->vehicle_image_url ?? 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=1200&h=750&q=85' }}" 
+                                        <img src="{{ $offer->vehicle_image_url ? asset($offer->vehicle_image_url) : asset('images/vehicles/scorpio.jpg') }}" 
                                             alt="{{ $offer->vehicle_name }}" 
                                             class="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300">
                                     </div>
@@ -323,7 +323,6 @@
                                 <div class="md:col-span-5 space-y-3.5">
                                     <div>
                                         <h3 class="font-black text-slate-900 text-xl leading-tight">{{ $offer->vehicle_name }}</h3>
-                                        <div class="text-xs text-slate-500 font-medium">or comparable model in Nepal</div>
                                     </div>
 
                                     <!-- Specs Badges -->
@@ -452,7 +451,7 @@
                 <!-- Vehicle & Rate Summary Card -->
                 <div class="p-4 rounded-2xl bg-slate-950/80 border border-white/10 flex items-center gap-4 mb-6">
                     <img
-                        src="{{ $selectedOffer->vehicle_image_url ?? 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=800&q=80' }}"
+                        src="{{ $selectedOffer->vehicle_image_url ? asset($selectedOffer->vehicle_image_url) : asset('images/vehicles/scorpio.jpg') }}"
                         alt="{{ $selectedOffer->vehicle_name }}"
                         class="w-28 h-20 rounded-xl object-contain bg-slate-900/90 p-1.5 border border-white/10 shrink-0"
                     />

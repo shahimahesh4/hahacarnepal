@@ -15,11 +15,43 @@ class PartnerDashboard extends Component
     public string $password = '';
     public bool $isAuthenticated = false;
 
+    // Add Vehicle Modal Form
+    public bool $isAddVehicleModalOpen = false;
+    public string $vehMake = 'Mahindra';
+    public string $vehModel = 'Scorpio 4WD';
+    public int $vehYear = 2023;
+    public string $vehCategory = 'suv_4wd';
+    public string $vehFuelType = 'diesel';
+    public string $vehTransmission = 'manual';
+    public int $vehSeats = 7;
+    public string $vehPlateNumber = '';
+    public int $vehDailyRate = 4500;
+    public bool $vehHas4wd = true;
+    public bool $vehProvidesDriver = true;
+    public bool $vehAllowsSelfDrive = true;
+    public string $vehicleSuccessMessage = '';
+
+    // Partner Profile Edit
+    public string $partnerName = '';
+    public string $partnerPhone = '';
+    public string $partnerCity = '';
+    public string $profileSuccessMessage = '';
+
     public function mount(): void
     {
         if (Auth::check() && Auth::user()->isPartner()) {
-            $this->profile = Auth::user()->driverProfile()->with(['vehicles', 'bookings.vehicle'])->first();
+            $this->loadPartnerProfile();
+        }
+    }
+
+    protected function loadPartnerProfile(): void
+    {
+        $this->profile = Auth::user()->driverProfile()->with(['vehicles', 'bookings.vehicle'])->first();
+        if ($this->profile) {
             $this->isAuthenticated = true;
+            $this->partnerName = Auth::user()->name;
+            $this->partnerPhone = Auth::user()->phone ?? '';
+            $this->partnerCity = $this->profile->service_city ?? 'Kathmandu';
         }
     }
 
@@ -33,8 +65,7 @@ class PartnerDashboard extends Component
         if (Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
             $user = Auth::user();
             if ($user->isPartner()) {
-                $this->profile = $user->driverProfile()->with(['vehicles', 'bookings.vehicle'])->first();
-                $this->isAuthenticated = true;
+                $this->loadPartnerProfile();
                 return;
             }
             Auth::logout();
@@ -52,19 +83,104 @@ class PartnerDashboard extends Component
         $this->isAuthenticated = false;
     }
 
+    public function openAddVehicleModal(): void
+    {
+        $this->isAddVehicleModalOpen = true;
+    }
+
+    public function closeAddVehicleModal(): void
+    {
+        $this->isAddVehicleModalOpen = false;
+    }
+
+    public function saveVehicle(): void
+    {
+        $this->validate([
+            'vehMake' => 'required|string|max:50',
+            'vehModel' => 'required|string|max:50',
+            'vehYear' => 'required|integer|min:2010|max:' . (date('Y') + 1),
+            'vehCategory' => 'required|string',
+            'vehFuelType' => 'required|in:petrol,diesel,electric,hybrid',
+            'vehPlateNumber' => 'required|string|max:30',
+            'vehDailyRate' => 'required|integer|min:1000',
+        ]);
+
+        // Auto map representative photo
+        $photoMap = [
+            'scorpio' => 'images/vehicles/scorpio.jpg',
+            'hilux' => 'images/vehicles/hilux.jpg',
+            'hiace' => 'images/vehicles/hiace.jpg',
+            'swift' => 'images/vehicles/swift.jpg',
+            'creta' => 'images/vehicles/creta.jpg',
+            'byd' => 'images/vehicles/byd_atto3.jpg',
+            'dzire' => 'images/vehicles/dzire.jpg',
+            'bolero' => 'images/vehicles/bolero.jpg',
+            'prado' => 'images/vehicles/prado.jpg',
+            'traveller' => 'images/vehicles/force_traveller.jpg',
+        ];
+
+        $modelLower = strtolower($this->vehModel . ' ' . $this->vehMake);
+        $photo = 'images/vehicles/scorpio.jpg';
+        foreach ($photoMap as $key => $path) {
+            if (str_contains($modelLower, $key)) {
+                $photo = $path;
+                break;
+            }
+        }
+
+        Vehicle::create([
+            'driver_profile_id' => $this->profile->id,
+            'category' => $this->vehCategory,
+            'fuel_type' => $this->vehFuelType,
+            'transmission' => $this->vehTransmission,
+            'make' => $this->vehMake,
+            'model' => $this->vehModel,
+            'year' => $this->vehYear,
+            'seats' => $this->vehSeats,
+            'plate_number' => $this->vehPlateNumber,
+            'daily_rate' => $this->vehDailyRate,
+            'has_4wd' => $this->vehHas4wd,
+            'has_ac' => true,
+            'provides_driver' => $this->vehProvidesDriver,
+            'allows_self_drive' => $this->vehAllowsSelfDrive,
+            'vehicle_photo_path' => $photo,
+            'is_active' => true,
+        ]);
+
+        $this->profile->load('vehicles');
+        $this->isAddVehicleModalOpen = false;
+        $this->vehicleSuccessMessage = 'New vehicle successfully registered to your fleet!';
+    }
+
     public function confirmBooking(int $bookingId): void
     {
         $booking = Booking::where('driver_profile_id', $this->profile->id)->findOrFail($bookingId);
         $booking->update(['status' => 'confirmed']);
         $this->profile->load('bookings.vehicle');
+        session()->flash('bookingMessage', 'Reservation #' . $booking->booking_reference . ' accepted & confirmed!');
+    }
+
+    public function declineBooking(int $bookingId): void
+    {
+        $booking = Booking::where('driver_profile_id', $this->profile->id)->findOrFail($bookingId);
+        $booking->update([
+            'status' => 'cancelled',
+            'cancellation_reason' => 'Declined by partner driver',
+        ]);
+        $this->profile->load('bookings.vehicle');
+        session()->flash('bookingMessage', 'Reservation #' . $booking->booking_reference . ' declined.');
     }
 
     public function completeBooking(int $bookingId): void
     {
         $booking = Booking::where('driver_profile_id', $this->profile->id)->findOrFail($bookingId);
-        $booking->update(['status' => 'completed']);
+        $booking->update([
+            'status' => 'completed',
+            'payment_status' => 'paid',
+        ]);
         $this->profile->increment('total_bookings');
         $this->profile->load('bookings.vehicle');
+        session()->flash('bookingMessage', 'Trip #' . $booking->booking_reference . ' marked as completed!');
     }
 
     public function toggleVehicleActive(int $vehicleId): void
@@ -74,8 +190,42 @@ class PartnerDashboard extends Component
         $this->profile->load('vehicles');
     }
 
+    public function updatePartnerProfile(): void
+    {
+        $this->validate([
+            'partnerName' => 'required|string|min:2|max:100',
+            'partnerPhone' => 'required|string|min:8|max:20',
+            'partnerCity' => 'required|string|min:2|max:50',
+        ]);
+
+        Auth::user()->update([
+            'name' => $this->partnerName,
+            'phone' => $this->partnerPhone,
+        ]);
+
+        $this->profile->update([
+            'service_city' => $this->partnerCity,
+        ]);
+
+        $this->profileSuccessMessage = 'Partner profile details updated successfully!';
+    }
+
     public function render()
     {
-        return view('livewire.partner-dashboard');
+        $totalEarnings = 0;
+        $pendingBookingsCount = 0;
+        $activeVehiclesCount = 0;
+
+        if ($this->profile) {
+            $totalEarnings = $this->profile->bookings->where('status', 'completed')->sum('total_price');
+            $pendingBookingsCount = $this->profile->bookings->where('status', 'pending')->count();
+            $activeVehiclesCount = $this->profile->vehicles->where('is_active', true)->count();
+        }
+
+        return view('livewire.partner-dashboard', [
+            'totalEarnings' => $totalEarnings,
+            'pendingBookingsCount' => $pendingBookingsCount,
+            'activeVehiclesCount' => $activeVehiclesCount,
+        ]);
     }
 }

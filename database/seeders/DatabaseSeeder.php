@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
             VehicleCategorySeeder::class,
             ProviderSeeder::class,
             CmsSeeder::class,
+            PartnerSeeder::class,
         ]);
     }
 }

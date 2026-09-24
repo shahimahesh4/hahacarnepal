@@ -29,7 +29,7 @@ class StatsOverviewWidget extends BaseWidget
 
         return [
             Stat::make('Direct Bookings', number_format($directBookings))
-                ->description('Direct reservations on Hahacar')
+                ->description('Direct reservations on Hahakar')
                 ->descriptionIcon('heroicon-m-calendar-days')
                 ->color('success'),
 

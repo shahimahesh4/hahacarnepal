@@ -50,6 +50,6 @@ class PriceDropAlertNotification extends Notification
             ->line("**Daily Rate:** {$this->bestOffer->daily_price_formatted}/day • **Includes:** Free cancellation, unlimited mileage")
             ->action('View Deal & Lock In Price', $resultsUrl)
             ->line("Rental prices fluctuate frequently. Rates are subject to availability.")
-            ->salutation("Best regards,\nThe Hahacar Team\n\n[Unsubscribe from this alert]({$unsubscribeUrl})");
+            ->salutation("Best regards,\nThe Hahakar Team\n\n[Unsubscribe from this alert]({$unsubscribeUrl})");
     }
 }

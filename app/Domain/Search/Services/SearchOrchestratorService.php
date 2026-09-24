@@ -65,9 +65,9 @@ class SearchOrchestratorService
         // If no providers in DB yet, create or fallback to default mock provider
         if ($activeProviders->isEmpty()) {
             $mockProvider = Provider::firstOrCreate(
-                ['slug' => 'hahacar-mock'],
+                ['slug' => 'hahakar-mock'],
                 [
-                    'name' => 'Hahacar Direct Mock Network',
+                    'name' => 'Hahakar Direct Mock Network',
                     'adapter_class' => MockCarRentalProvider::class,
                     'status' => 'active',
                     'priority' => 1,

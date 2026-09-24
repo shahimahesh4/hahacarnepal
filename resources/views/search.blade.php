@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Compare Car Rental Offers | Hahacar')
+@section('title', 'Compare Car Rental Offers | Hahakar')
 
 @section('content')
     <livewire:search-results 

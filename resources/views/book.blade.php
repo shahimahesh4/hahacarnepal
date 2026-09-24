@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Direct Vehicle Booking & Rental in Nepal - Hahacar')
+@section('title', 'Direct Vehicle Booking & Rental in Nepal - Hahakar')
 @section('meta_description', 'Book verified vehicles in Nepal directly. Scorpio 4WD, Toyota Hilux, Creta, Swift, and HiAce tourist vans with professional chauffeur or self-drive.')
 
 @section('content')

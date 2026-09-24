@@ -26,6 +26,7 @@ class Vehicle extends Model
         'has_ac',
         'has_4wd',
         'daily_rate',
+        'rate_per_km',
         'provides_driver',
         'allows_self_drive',
         'vehicle_photo_path',
@@ -42,6 +43,7 @@ class Vehicle extends Model
             'has_ac' => 'boolean',
             'has_4wd' => 'boolean',
             'daily_rate' => 'integer',
+            'rate_per_km' => 'integer',
             'provides_driver' => 'boolean',
             'allows_self_drive' => 'boolean',
             'is_active' => 'boolean',
@@ -61,6 +63,38 @@ class Vehicle extends Model
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('is_active', true);
+    }
+
+    public function getEffectiveRatePerKmAttribute(): int
+    {
+        if ($this->rate_per_km && $this->rate_per_km > 0) {
+            return (int) $this->rate_per_km;
+        }
+
+        return \App\Domain\Pricing\Services\NepalDistanceService::getRatePerKmForFuelType($this->fuel_type ?? 'diesel');
+    }
+
+    public function getFormattedRatePerKmAttribute(): string
+    {
+        return 'Rs. ' . number_format($this->effective_rate_per_km) . '/km';
+    }
+
+    public function getFuelBadgeAttribute(): string
+    {
+        $fuel = strtolower($this->fuel_type ?? 'diesel');
+
+        return match ($fuel) {
+            'electric', 'ev' => '⚡ Electric EV',
+            'petrol' => '⛽ Petrol',
+            'diesel' => '🛢️ Diesel',
+            'hybrid' => '🔋 Hybrid',
+            default => ucfirst($fuel),
+        };
+    }
+
+    public function calculatePriceForDistance(int $distanceKm): int
+    {
+        return max(1000, $this->effective_rate_per_km * max(1, $distanceKm));
     }
 
     public function getFormattedDailyRateAttribute(): string

@@ -99,8 +99,8 @@ class SearchResults extends Component
             $driver = \App\Models\DriverProfile::where('status', 'verified')->first();
             if (!$driver) {
                 $user = \App\Models\User::firstOrCreate(
-                    ['email' => 'partner.fleet@hahacar.com'],
-                    ['name' => 'Hahacar Partner Fleet', 'role' => 'driver', 'password' => bcrypt('password'), 'phone' => '+977 9801234567']
+                    ['email' => 'partner.fleet@hahakar.com'],
+                    ['name' => 'Hahakar Partner Fleet', 'role' => 'driver', 'password' => bcrypt('password'), 'phone' => '+977 9801234567']
                 );
                 $driver = \App\Models\DriverProfile::create([
                     'user_id' => $user->id,

@@ -20,6 +20,10 @@ class Booking extends Model
         'customer_phone',
         'customer_email',
         'service_option',
+        'pricing_type',
+        'estimated_distance_km',
+        'rate_per_km',
+        'fuel_type',
         'pickup_location',
         'return_location',
         'pickup_date',
@@ -41,6 +45,8 @@ class Booking extends Model
             'return_date' => 'datetime',
             'total_days' => 'integer',
             'daily_rate' => 'integer',
+            'estimated_distance_km' => 'integer',
+            'rate_per_km' => 'integer',
             'total_price' => 'integer',
         ];
     }
@@ -51,7 +57,7 @@ class Booking extends Model
 
         static::creating(function (Booking $booking) {
             if (empty($booking->booking_reference)) {
-                $booking->booking_reference = 'HHC-BK-' . strtoupper(Str::random(6));
+                $booking->booking_reference = 'HHK-BK-' . strtoupper(Str::random(6));
             }
         });
     }
@@ -76,9 +82,32 @@ class Booking extends Model
         return 'Rs. ' . number_format($this->daily_rate);
     }
 
+    public function getFormattedRatePerKmAttribute(): string
+    {
+        return 'Rs. ' . number_format($this->rate_per_km ?? 0) . '/km';
+    }
+
     public function getFormattedTotalPriceAttribute(): string
     {
         return 'Rs. ' . number_format($this->total_price);
+    }
+
+    public function getIsDistanceTripAttribute(): bool
+    {
+        return ($this->pricing_type ?? 'daily') === 'distance';
+    }
+
+    public function getFuelBadgeAttribute(): string
+    {
+        $fuel = strtolower($this->fuel_type ?? ($this->vehicle->fuel_type ?? 'diesel'));
+
+        return match ($fuel) {
+            'electric', 'ev' => '⚡ Electric EV',
+            'petrol' => '⛽ Petrol',
+            'diesel' => '🛢️ Diesel',
+            'hybrid' => '🔋 Hybrid',
+            default => ucfirst($fuel),
+        };
     }
 
     public function isPending(): bool

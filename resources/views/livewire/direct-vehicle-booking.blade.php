@@ -1,24 +1,25 @@
-<div class="space-y-8">
+<div class="space-y-8" x-data="{ init() { window.addEventListener('scroll-to-fleet', () => { document.getElementById('fleet-results')?.scrollIntoView({ behavior: 'smooth' }); }); } }">
     <!-- Service Option & Location Selection Card -->
     <div class="relative rounded-3xl bg-slate-900/95 border border-white/10 p-6 md:p-8 backdrop-blur-xl shadow-2xl shadow-black/50">
-        <!-- Mode Tabs: With Driver vs Self-Drive -->
+        <!-- Top Mode Controls: Service Mode + Pricing Type Switcher -->
         <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-white/10">
+            <!-- Mode Tabs: With Driver vs Self-Drive -->
             <div class="inline-flex p-1.5 rounded-2xl bg-slate-950/90 border border-white/10 shadow-inner">
                 <button
                     type="button"
                     wire:click="$set('serviceOption', 'with_driver')"
-                    class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 {{ $serviceOption === 'with_driver' ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-bold shadow-lg shadow-emerald-500/25 scale-[1.02]' : 'text-slate-400 hover:text-white' }}"
+                    class="flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer {{ $serviceOption === 'with_driver' ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-bold shadow-lg shadow-emerald-500/25 scale-[1.02]' : 'text-slate-400 hover:text-white' }}"
                 >
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                     <span>With Driver (Chauffeur)</span>
-                    <span class="px-2 py-0.5 text-[10px] uppercase tracking-wider rounded-full bg-emerald-400/20 text-emerald-950 font-black">Popular</span>
+                    <span class="hidden sm:inline-block px-2 py-0.5 text-[10px] uppercase tracking-wider rounded-full bg-emerald-400/20 text-emerald-950 font-black">Popular</span>
                 </button>
                 <button
                     type="button"
                     wire:click="$set('serviceOption', 'self_drive')"
-                    class="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 {{ $serviceOption === 'self_drive' ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-bold shadow-lg shadow-emerald-500/25 scale-[1.02]' : 'text-slate-400 hover:text-white' }}"
+                    class="flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer {{ $serviceOption === 'self_drive' ? 'bg-gradient-to-r from-emerald-500 to-teal-500 text-slate-950 font-bold shadow-lg shadow-emerald-500/25 scale-[1.02]' : 'text-slate-400 hover:text-white' }}"
                 >
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
@@ -27,38 +28,96 @@
                 </button>
             </div>
 
-            <div class="flex items-center gap-2 text-xs text-slate-400">
-                <span class="inline-flex w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span>Verified Nepal Partner Fleet • Instant Confirmation in NPR</span>
+            <!-- Pricing Mode Switcher: Daily vs Distance (KM) -->
+            <div class="inline-flex p-1.5 rounded-2xl bg-slate-950/90 border border-white/10 shadow-inner">
+                <button
+                    type="button"
+                    wire:click="setPricingType('daily')"
+                    class="flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer {{ $pricingType === 'daily' ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/25' : 'text-slate-400 hover:text-white' }}"
+                >
+                    <span>📅</span>
+                    <span>Daily Rental</span>
+                </button>
+                <button
+                    type="button"
+                    wire:click="setPricingType('distance')"
+                    class="flex items-center gap-1.5 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer {{ $pricingType === 'distance' ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/25' : 'text-slate-400 hover:text-white' }}"
+                >
+                    <span>🛣️</span>
+                    <span>Distance (Per KM)</span>
+                    <span class="px-1.5 py-0.5 text-[9px] uppercase tracking-wider rounded-md {{ $pricingType === 'distance' ? 'bg-slate-950 text-emerald-400' : 'bg-emerald-500/20 text-emerald-400' }} font-black">EV Rs. {{ $rateElectric }}/km</span>
+                </button>
             </div>
         </div>
 
-        <!-- Search & Booking Controls -->
-        <div class="mt-6 grid grid-cols-1 md:grid-cols-12 gap-4">
+        <!-- Search & Booking Controls Grid -->
+        <div class="mt-6 grid grid-cols-1 md:grid-cols-12 gap-4 items-end">
             <!-- Pickup Station -->
-            <div class="md:col-span-4">
-                <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5 flex items-center gap-1.5">
-                    <span class="text-emerald-400">📍</span> Pickup Hub in Nepal
-                </label>
-                <div class="relative">
-                    <select
-                        wire:model.live="pickupLocation"
-                        class="w-full pl-10 pr-8 py-3.5 rounded-2xl bg-slate-800/90 border border-white/10 text-white text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition cursor-pointer"
-                    >
-                        @foreach ($popularLocations as $loc)
-                            <option value="{{ $loc }}">{{ $loc }}</option>
-                        @endforeach
-                    </select>
-                    <div class="absolute left-3.5 top-3.5 text-emerald-400 pointer-events-none">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        </svg>
-                    </div>
+            <div class="{{ $pricingType === 'daily' ? 'md:col-span-3' : 'md:col-span-4' }}">
+                <div class="flex items-center justify-between mb-1.5">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                        <span class="text-emerald-400">📍</span> Pickup Hub
+                    </label>
+                    @if ($locationMode === 'google_maps' && !empty($googleMapsApiKey))
+                        <span class="text-[9px] text-emerald-400 font-bold px-1.5 py-0.5 rounded bg-emerald-500/15 border border-emerald-500/30">Google Maps API</span>
+                    @else
+                        <span class="text-[9px] text-slate-400 font-bold px-1.5 py-0.5 rounded bg-slate-800 border border-white/10">Manual Hubs</span>
+                    @endif
                 </div>
+
+                @if ($locationMode === 'google_maps' && !empty($googleMapsApiKey))
+                    <div
+                        x-data="{
+                            initPickup() {
+                                if (typeof google === 'undefined' || !google.maps || !google.maps.places) return;
+                                const autocomplete = new google.maps.places.Autocomplete(this.$refs.pickupInput, {
+                                    componentRestrictions: { country: '{{ $googleMapsCountry ?: 'np' }}' },
+                                    fields: ['formatted_address', 'name']
+                                });
+                                autocomplete.addListener('place_changed', () => {
+                                    const place = autocomplete.getPlace();
+                                    const val = place.formatted_address || place.name || this.$refs.pickupInput.value;
+                                    @this.set('pickupLocation', val);
+                                });
+                            }
+                        }"
+                        x-init="initPickup()"
+                        class="relative"
+                    >
+                        <input
+                            x-ref="pickupInput"
+                            type="text"
+                            wire:model.lazy="pickupLocation"
+                            placeholder="Type any address, hotel, or landmark in Nepal..."
+                            class="w-full pl-10 pr-4 py-3.5 rounded-2xl bg-slate-800/90 border border-white/10 text-white text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition"
+                        />
+                        <div class="absolute left-3.5 top-3.5 text-emerald-400 pointer-events-none">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                @else
+                    <div class="relative">
+                        <select
+                            wire:model.live="pickupLocation"
+                            class="w-full pl-10 pr-8 py-3.5 rounded-2xl bg-slate-800/90 border border-white/10 text-white text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition cursor-pointer"
+                        >
+                            @foreach ($popularLocations as $loc)
+                                <option value="{{ $loc }}">{{ $loc }}</option>
+                            @endforeach
+                        </select>
+                        <div class="absolute left-3.5 top-3.5 text-emerald-400 pointer-events-none">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            </svg>
+                        </div>
+                    </div>
+                @endif
             </div>
 
             <!-- Return Station (if different) -->
-            <div class="md:col-span-4">
+            <div class="{{ $pricingType === 'daily' ? 'md:col-span-3' : 'md:col-span-4' }}">
                 <div class="flex items-center justify-between mb-1.5">
                     <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
                         <span class="text-amber-400">🔄</span> Return Location
@@ -76,7 +135,34 @@
                         <svg class="w-4 h-4 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                         </svg>
-                        <span>Same as pickup ({{ Str::limit($pickupLocation, 28) }})</span>
+                        <span class="truncate">Same as pickup ({{ Str::limit($pickupLocation, 22) }})</span>
+                    </div>
+                @elseif ($locationMode === 'google_maps' && !empty($googleMapsApiKey))
+                    <div
+                        x-data="{
+                            initReturn() {
+                                if (typeof google === 'undefined' || !google.maps || !google.maps.places) return;
+                                const autocomplete = new google.maps.places.Autocomplete(this.$refs.returnInput, {
+                                    componentRestrictions: { country: '{{ $googleMapsCountry ?: 'np' }}' },
+                                    fields: ['formatted_address', 'name']
+                                });
+                                autocomplete.addListener('place_changed', () => {
+                                    const place = autocomplete.getPlace();
+                                    const val = place.formatted_address || place.name || this.$refs.returnInput.value;
+                                    @this.set('returnLocation', val);
+                                });
+                            }
+                        }"
+                        x-init="initReturn()"
+                        class="relative"
+                    >
+                        <input
+                            x-ref="returnInput"
+                            type="text"
+                            wire:model.lazy="returnLocation"
+                            placeholder="Type return destination in Nepal..."
+                            class="w-full pl-4 pr-4 py-3.5 rounded-2xl bg-slate-800/90 border border-white/10 text-white text-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition"
+                        />
                     </div>
                 @else
                     <select
@@ -90,44 +176,161 @@
                 @endif
             </div>
 
-            <!-- Rental Duration & Dates -->
-            <div class="md:col-span-4 grid grid-cols-2 gap-2">
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Pickup Date</label>
-                    <input
-                        type="date"
-                        wire:model.live="pickupDate"
-                        min="{{ date('Y-m-d') }}"
-                        class="w-full px-3 py-3 rounded-2xl bg-slate-800/90 border border-white/10 text-white text-sm focus:border-emerald-500 outline-none cursor-pointer"
-                    />
+            <!-- Mode Dependent Input: Daily Dates OR Distance Input -->
+            @if ($pricingType === 'daily')
+                <!-- Rental Duration & Dates -->
+                <div class="md:col-span-4 grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Pickup Date</label>
+                        <input
+                            type="date"
+                            wire:model.live="pickupDate"
+                            min="{{ date('Y-m-d') }}"
+                            class="w-full px-3 py-3 rounded-2xl bg-slate-800/90 border border-white/10 text-white text-sm focus:border-emerald-500 outline-none cursor-pointer"
+                        />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Return Date</label>
+                        <input
+                            type="date"
+                            wire:model.live="returnDate"
+                            min="{{ $pickupDate }}"
+                            class="w-full px-3 py-3 rounded-2xl bg-slate-800/90 border border-white/10 text-white text-sm focus:border-emerald-500 outline-none cursor-pointer"
+                        />
+                    </div>
                 </div>
-                <div>
-                    <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5">Return Date</label>
-                    <input
-                        type="date"
-                        wire:model.live="returnDate"
-                        min="{{ $pickupDate }}"
-                        class="w-full px-3 py-3 rounded-2xl bg-slate-800/90 border border-white/10 text-white text-sm focus:border-emerald-500 outline-none cursor-pointer"
-                    />
+            @else
+                <!-- Estimated Distance Controller (KM) -->
+                <div class="md:col-span-2">
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-400">
+                            🛣️ Trip Distance
+                        </label>
+                        <span class="text-[10px] text-emerald-400 font-bold">Auto-Est.</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <button
+                            type="button"
+                            wire:click="decrementDistance(25)"
+                            class="w-10 h-11 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-black text-sm flex items-center justify-center border border-white/10 transition cursor-pointer"
+                            title="Subtract 25 km"
+                        >
+                            -
+                        </button>
+                        <div class="relative flex-1">
+                            <input
+                                type="number"
+                                wire:model.live="estimatedDistanceKm"
+                                min="10"
+                                max="3000"
+                                class="w-full px-2 py-3 rounded-2xl bg-slate-800/90 border border-white/10 text-white text-center font-black text-sm focus:border-emerald-500 outline-none"
+                            />
+                            <span class="absolute right-2 top-3.5 text-[10px] text-slate-400 font-bold pointer-events-none">KM</span>
+                        </div>
+                        <button
+                            type="button"
+                            wire:click="incrementDistance(25)"
+                            class="w-10 h-11 rounded-2xl bg-slate-800 hover:bg-slate-700 text-white font-black text-sm flex items-center justify-center border border-white/10 transition cursor-pointer"
+                            title="Add 25 km"
+                        >
+                            +
+                        </button>
+                    </div>
+                </div>
+            @endif
+
+            <!-- Search & Filter Submit Button -->
+            <div class="{{ $pricingType === 'daily' ? 'md:col-span-2' : 'md:col-span-2' }}">
+                <button
+                    type="button"
+                    wire:click="searchFleet"
+                    wire:loading.attr="disabled"
+                    class="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 active:scale-95 text-slate-950 font-black text-sm shadow-xl shadow-emerald-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer group"
+                >
+                    <span wire:loading.remove wire:target="searchFleet" class="flex items-center gap-1.5">
+                        <svg class="w-4 h-4 text-slate-950 group-hover:scale-110 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                        <span>Search Fleet</span>
+                    </span>
+                    <span wire:loading wire:target="searchFleet" class="flex items-center gap-1.5 text-xs">
+                        <svg class="animate-spin w-4 h-4 text-slate-950" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+                        </svg>
+                        <span>Searching...</span>
+                    </span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Interactive Quick Hubs & Distance Rate Info Bar -->
+        <div class="mt-4 pt-4 border-t border-white/5 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex flex-wrap items-center gap-2">
+                <span class="text-xs text-slate-400 font-bold">Quick Hubs:</span>
+                @foreach (['✈️ KTM Airport' => 'Tribhuvan International Airport (KTM)', '🏔️ Pokhara PKR' => 'Pokhara International Airport (PKR)', '🛍️ Thamel' => 'Thamel Tourist Hub, Kathmandu', '⛵ Lakeside' => 'Lakeside, Pokhara', '🦏 Chitwan' => 'Sauraha Tourist Center, Chitwan'] as $chipLabel => $chipLoc)
+                    <button
+                        type="button"
+                        wire:click="$set('pickupLocation', '{{ $chipLoc }}'); searchFleet();"
+                        class="px-3 py-1 rounded-xl text-xs font-semibold bg-slate-800/80 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 border border-white/10 hover:border-emerald-500/30 transition cursor-pointer"
+                    >
+                        {{ $chipLabel }}
+                    </button>
+                @endforeach
+            </div>
+
+            <!-- Dynamic Pricing Indicator Pill -->
+            @if ($pricingType === 'distance')
+                <div class="flex flex-wrap items-center gap-2 text-xs">
+                    <span class="text-slate-400">Configured Fuel Rates:</span>
+                    <span class="px-2.5 py-1 rounded-lg bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 font-bold">
+                        ⚡ EV: Rs. {{ $rateElectric }}/km
+                    </span>
+                    <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 border border-white/10 font-medium">
+                        ⛽ Petrol: Rs. {{ $ratePetrol }}/km
+                    </span>
+                    <span class="px-2.5 py-1 rounded-lg bg-slate-800 text-slate-300 border border-white/10 font-medium">
+                        🛢️ Diesel: Rs. {{ $rateDiesel }}/km
+                    </span>
+                    <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-black">
+                        Trip: {{ $estimatedDistanceKm }} km
+                    </span>
+                </div>
+            @else
+                <div class="text-xs text-emerald-400 font-bold bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
+                    Duration: {{ $totalDays }} {{ Str::plural('Day', $totalDays) }}
+                </div>
+            @endif
+        </div>
+    </div>
+
+    <!-- Live Search Results Header Banner -->
+    <div id="fleet-results" class="scroll-mt-28 p-4 rounded-2xl bg-slate-900/90 border border-emerald-500/30 backdrop-blur-md shadow-lg flex flex-wrap items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <span class="w-3 h-3 rounded-full bg-emerald-400 animate-pulse"></span>
+            <div>
+                <div class="text-sm font-black text-white flex items-center gap-2">
+                    <span>{{ $vehicles->count() }} Available {{ $serviceOption === 'with_driver' ? 'Chauffeur-Driven' : 'Self-Drive' }} Vehicles</span>
+                    <span class="px-2 py-0.5 rounded-md text-[10px] uppercase font-bold bg-emerald-500/20 text-emerald-300">
+                        {{ $currentCity }} Hub
+                    </span>
+                </div>
+                <div class="text-xs text-slate-400 mt-0.5">
+                    Pickup: <strong class="text-slate-200">{{ $pickupLocation }}</strong>
+                    @if (!$sameDropoff)
+                        → Dropoff: <strong class="text-slate-200">{{ $returnLocation }}</strong>
+                    @endif
+                    • Mode: <span class="text-emerald-400 font-semibold">{{ $pricingType === 'daily' ? $totalDays . ' Days Rental' : $estimatedDistanceKm . ' KM Distance Trip' }}</span>
                 </div>
             </div>
         </div>
 
-        <!-- Quick Nepal Destination Chips -->
-        <div class="mt-4 pt-4 border-t border-white/5 flex flex-wrap items-center gap-2">
-            <span class="text-xs text-slate-400 font-bold">Quick Hubs:</span>
-            @foreach (['✈️ KTM Airport' => 'Tribhuvan International Airport (KTM)', '🏔️ Pokhara PKR' => 'Pokhara International Airport (PKR)', '🛍️ Thamel' => 'Thamel Tourist Hub, Kathmandu', '⛵ Lakeside' => 'Lakeside, Pokhara', '🦏 Chitwan' => 'Sauraha Tourist Center, Chitwan'] as $chipLabel => $chipLoc)
-                <button
-                    type="button"
-                    wire:click="$set('pickupLocation', '{{ $chipLoc }}')"
-                    class="px-3 py-1 rounded-xl text-xs font-semibold bg-slate-800/80 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-300 border border-white/10 hover:border-emerald-500/30 transition cursor-pointer"
-                >
-                    {{ $chipLabel }}
-                </button>
-            @endforeach
-            <div class="ml-auto text-xs text-emerald-400 font-bold bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/20">
-                Duration: {{ $totalDays }} {{ Str::plural('Day', $totalDays) }}
-            </div>
+        <div class="flex items-center gap-2">
+            @if ($hasSearched)
+                <span class="text-xs text-emerald-400 font-bold bg-emerald-500/10 px-3 py-1.5 rounded-xl border border-emerald-500/20">
+                    ✓ Search Updated
+                </span>
+            @endif
         </div>
     </div>
 
@@ -137,11 +340,12 @@
             @php
                 $categories = [
                     'all' => 'All Vehicles',
-                    'suv_4wd' => '🏔️ 4WD SUVs',
-                    'compact_suv' => '🚙 Compact SUVs',
+                    'suv_4wd' => '🏔️ 4WD SUVs & Jeeps',
                     'tourist_van' => '🚐 Tourist Vans (HiAce)',
+                    'compact_suv' => '🚙 Compact SUVs & EVs',
                     'sedan' => '🚗 Sedans',
-                    'hatchback' => '⚡ Hatchbacks',
+                    'hatchback' => '⚡ City Hatchbacks',
+                    'luxury_suv' => '👑 Luxury 4WD',
                 ];
             @endphp
             @foreach ($categories as $catKey => $catLabel)
@@ -171,7 +375,7 @@
                     <!-- Vehicle Image & Badges -->
                     <div class="relative h-48 sm:h-52 w-full rounded-2xl overflow-hidden bg-gradient-to-b from-slate-900/80 via-slate-950/90 to-slate-950 border border-white/10 flex items-center justify-center p-3 mb-4">
                         <img
-                            src="{{ $vehicle->vehicle_photo_path ?? 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=800&q=80' }}"
+                            src="{{ $vehicle->vehicle_photo_path ? asset($vehicle->vehicle_photo_path) : asset('images/vehicles/scorpio.jpg') }}"
                             alt="{{ $vehicle->title }}"
                             class="h-full w-full object-contain group-hover:scale-105 transition-transform duration-500"
                         />
@@ -187,6 +391,9 @@
                                     4WD / 4x4
                                 </span>
                             @endif
+                            <span class="px-2 py-1 rounded-lg text-[10px] font-black uppercase bg-slate-900/90 text-teal-300 border border-teal-500/30 backdrop-blur-md">
+                                {{ $vehicle->fuel_badge }}
+                            </span>
                         </div>
 
                         <!-- Service Option Indicator -->
@@ -244,8 +451,8 @@
                             <span class="text-[10px] text-slate-400">Gear</span>
                         </div>
                         <div>
-                            <span class="block text-xs font-black text-white uppercase">{{ $vehicle->fuel_type }}</span>
-                            <span class="text-[10px] text-slate-400">Fuel</span>
+                            <span class="block text-xs font-black text-emerald-400 uppercase">{{ $vehicle->fuel_type }}</span>
+                            <span class="text-[10px] text-slate-400">{{ $vehicle->formatted_rate_per_km }}</span>
                         </div>
                     </div>
                 </div>
@@ -253,14 +460,24 @@
                 <!-- Price & CTA Button -->
                 <div class="pt-3 flex items-center justify-between border-t border-white/5">
                     <div>
-                        <div class="text-[11px] text-slate-400 font-semibold">Daily Rate</div>
-                        <div class="text-xl font-black text-white">
-                            {{ $vehicle->formatted_daily_rate }}
-                            <span class="text-xs font-normal text-slate-400">/day</span>
-                        </div>
-                        <div class="text-[11px] text-emerald-400 font-bold mt-0.5">
-                            Total: Rs. {{ number_format($vehicle->daily_rate * $totalDays) }} ({{ $totalDays }} {{ Str::plural('day', $totalDays) }})
-                        </div>
+                        @if ($pricingType === 'distance')
+                            <div class="text-[11px] text-slate-400 font-semibold">Distance Trip Rate</div>
+                            <div class="text-xl font-black text-emerald-400">
+                                {{ $vehicle->formatted_rate_per_km }}
+                            </div>
+                            <div class="text-[11px] text-slate-300 font-bold mt-0.5">
+                                Total: Rs. {{ number_format($vehicle->calculatePriceForDistance($estimatedDistanceKm)) }} ({{ $estimatedDistanceKm }} km)
+                            </div>
+                        @else
+                            <div class="text-[11px] text-slate-400 font-semibold">Daily Rental Rate</div>
+                            <div class="text-xl font-black text-white">
+                                {{ $vehicle->formatted_daily_rate }}
+                                <span class="text-xs font-normal text-slate-400">/day</span>
+                            </div>
+                            <div class="text-[11px] text-emerald-400 font-bold mt-0.5">
+                                Total: Rs. {{ number_format($vehicle->daily_rate * $totalDays) }} ({{ $totalDays }} {{ Str::plural('day', $totalDays) }})
+                            </div>
+                        @endif
                     </div>
 
                     <button
@@ -322,22 +539,27 @@
                 <!-- Vehicle Summary Card -->
                 <div class="p-4 rounded-2xl bg-slate-950/80 border border-white/10 flex items-center gap-4 mb-6">
                     <img
-                        src="{{ $selectedVehicle->vehicle_photo_path ?? 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=400&q=80' }}"
+                        src="{{ $selectedVehicle->vehicle_photo_path ? asset($selectedVehicle->vehicle_photo_path) : asset('images/vehicles/scorpio.jpg') }}"
                         alt="{{ $selectedVehicle->title }}"
                         class="w-24 h-16 rounded-xl object-contain bg-slate-900/90 p-1 border border-white/10 shrink-0"
                     />
                     <div class="flex-1 min-w-0">
                         <div class="font-bold text-white truncate">{{ $selectedVehicle->title }}</div>
                         <div class="text-xs text-slate-400">
-                            {{ $selectedVehicle->category_label }} • {{ $selectedVehicle->plate_number }}
+                            {{ $selectedVehicle->category_label }} • {{ $selectedVehicle->plate_number }} • {{ $selectedVehicle->fuel_badge }}
                         </div>
                         <div class="text-xs text-emerald-400 font-semibold mt-0.5">
                             {{ $serviceOption === 'with_driver' ? '✓ Professional Chauffeur Included' : '✓ Self-Drive Rental' }}
                         </div>
                     </div>
                     <div class="text-right">
-                        <div class="text-xs text-slate-400">{{ $totalDays }} {{ Str::plural('Day', $totalDays) }}</div>
-                        <div class="text-lg font-black text-white">Rs. {{ number_format($selectedVehicle->daily_rate * $totalDays) }}</div>
+                        @if ($pricingType === 'distance')
+                            <div class="text-xs text-slate-400">{{ $estimatedDistanceKm }} km @ {{ $selectedVehicle->formatted_rate_per_km }}</div>
+                            <div class="text-lg font-black text-emerald-400">Rs. {{ number_format($selectedVehicle->calculatePriceForDistance($estimatedDistanceKm)) }}</div>
+                        @else
+                            <div class="text-xs text-slate-400">{{ $totalDays }} {{ Str::plural('Day', $totalDays) }}</div>
+                            <div class="text-lg font-black text-white">Rs. {{ number_format($selectedVehicle->daily_rate * $totalDays) }}</div>
+                        @endif
                     </div>
                 </div>
 
@@ -393,21 +615,34 @@
                     <!-- Payment Option -->
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 mb-2">Payment Preference in Nepal</label>
-                        <div class="grid grid-cols-2 gap-3">
-                            <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 border border-white/10 cursor-pointer hover:border-emerald-500/40">
-                                <input type="radio" wire:model="paymentMethod" value="cash" class="text-emerald-500 focus:ring-0">
-                                <div>
-                                    <div class="text-xs font-bold text-white">Cash on Pickup</div>
-                                    <div class="text-[10px] text-slate-400">Pay directly to partner driver</div>
-                                </div>
-                            </label>
-                            <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 border border-white/10 cursor-pointer hover:border-emerald-500/40">
-                                <input type="radio" wire:model="paymentMethod" value="esewa" class="text-emerald-500 focus:ring-0">
-                                <div>
-                                    <div class="text-xs font-bold text-white">eSewa / Digital Wallet</div>
-                                    <div class="text-[10px] text-slate-400">Pay via QR upon car handover</div>
-                                </div>
-                            </label>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            @if ($enableCash)
+                                <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 border border-white/10 cursor-pointer hover:border-emerald-500/40 {{ $paymentMethod === 'cash' ? 'border-emerald-500 ring-1 ring-emerald-500' : '' }}">
+                                    <input type="radio" wire:model="paymentMethod" value="cash" class="text-emerald-500 focus:ring-0">
+                                    <div>
+                                        <div class="text-xs font-bold text-white">Cash on Pickup</div>
+                                        <div class="text-[10px] text-slate-400">Pay upon handover</div>
+                                    </div>
+                                </label>
+                            @endif
+                            @if ($enableEsewa)
+                                <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 border border-white/10 cursor-pointer hover:border-emerald-500/40 {{ $paymentMethod === 'esewa' ? 'border-emerald-500 ring-1 ring-emerald-500' : '' }}">
+                                    <input type="radio" wire:model="paymentMethod" value="esewa" class="text-emerald-500 focus:ring-0">
+                                    <div>
+                                        <div class="text-xs font-bold text-emerald-400">eSewa QR</div>
+                                        <div class="text-[10px] text-slate-400">Digital wallet / QR</div>
+                                    </div>
+                                </label>
+                            @endif
+                            @if ($enableKhalti)
+                                <label class="flex items-center gap-3 p-3 rounded-xl bg-slate-800/80 border border-white/10 cursor-pointer hover:border-emerald-500/40 {{ $paymentMethod === 'khalti' ? 'border-emerald-500 ring-1 ring-emerald-500' : '' }}">
+                                    <input type="radio" wire:model="paymentMethod" value="khalti" class="text-emerald-500 focus:ring-0">
+                                    <div>
+                                        <div class="text-xs font-bold text-purple-400">Khalti Wallet</div>
+                                        <div class="text-[10px] text-slate-400">Instant digital pay</div>
+                                    </div>
+                                </label>
+                            @endif
                         </div>
                     </div>
 
@@ -441,6 +676,9 @@
                     </div>
                 </form>
             </div>
-        </div>
+    @endif
+
+    @if ($locationMode === 'google_maps' && !empty($googleMapsApiKey))
+        <script src="https://maps.googleapis.com/maps/api/js?key={{ $googleMapsApiKey }}&libraries=places" async defer></script>
     @endif
 </div>

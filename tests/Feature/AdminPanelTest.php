@@ -18,19 +18,19 @@ class AdminPanelTest extends TestCase
 
     public function test_admin_can_access_filament_dashboard(): void
     {
-        $admin = User::where('email', 'admin@hahacar.com')->first();
+        $admin = User::where('email', 'admin@hahakar.com')->first();
 
-        $response = $this->actingAs($admin)->get('/admin');
+        $response = $this->actingAs($admin)->get('/stnapanel');
         $response->assertStatus(200);
-        $response->assertSee('Hahacar Operations');
+        $response->assertSee('Hahakar Operations');
     }
 
     public function test_admin_can_view_providers_list(): void
     {
-        $admin = User::where('email', 'admin@hahacar.com')->first();
+        $admin = User::where('email', 'admin@hahakar.com')->first();
 
-        $response = $this->actingAs($admin)->get('/admin/providers');
+        $response = $this->actingAs($admin)->get('/stnapanel/providers');
         $response->assertStatus(200);
-        $response->assertSee('Hahacar Global Rental Network');
+        $response->assertSee('Hahakar Nepal Rental Network');
     }
 }

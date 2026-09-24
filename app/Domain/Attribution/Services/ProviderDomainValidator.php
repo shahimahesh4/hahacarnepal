@@ -10,8 +10,8 @@ class ProviderDomainValidator
      * Default allowed hostnames for redirects across providers.
      */
     protected array $globalAllowedDomains = [
-        'demo-booking.hahacar.com',
-        'mock-partner.hahacar.local',
+        'demo-booking.hahakar.com',
+        'mock-partner.hahakar.local',
         'partner.therentalcars.test',
         'localhost',
         '127.0.0.1',

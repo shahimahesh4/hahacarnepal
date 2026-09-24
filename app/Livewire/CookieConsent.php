@@ -13,7 +13,7 @@ class CookieConsent extends Component
 
     public function mount(): void
     {
-        if (request()->cookie('hahacar_cookie_consent')) {
+        if (request()->cookie('hahakar_cookie_consent')) {
             $this->visible = false;
         }
     }
@@ -42,7 +42,7 @@ class CookieConsent extends Component
             'timestamp' => now()->toIso8601String(),
         ]);
 
-        cookie()->queue(cookie('hahacar_cookie_consent', $payload, 60 * 24 * 365));
+        cookie()->queue(cookie('hahakar_cookie_consent', $payload, 60 * 24 * 365));
         $this->visible = false;
     }
 

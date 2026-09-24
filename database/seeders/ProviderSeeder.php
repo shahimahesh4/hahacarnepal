@@ -12,9 +12,9 @@ class ProviderSeeder extends Seeder
     public function run(): void
     {
         $provider = Provider::updateOrCreate(
-            ['slug' => 'hahacar-mock'],
+            ['slug' => 'hahakar-mock'],
             [
-                'name' => 'Hahacar Global Rental Network',
+                'name' => 'Hahakar Nepal Rental Network',
                 'adapter_class' => MockCarRentalProvider::class,
                 'status' => 'active',
                 'priority' => 1,
@@ -31,10 +31,10 @@ class ProviderSeeder extends Seeder
             [
                 'api_key' => encrypt('mock_api_key_8923487293'),
                 'api_secret' => encrypt('mock_secret_98234789234'),
-                'endpoint_url' => 'https://sandbox-api.hahacar.local/v1',
+                'endpoint_url' => 'https://sandbox-api.hahakar.local/v1',
                 'allowed_domains' => [
-                    'demo-booking.hahacar.com',
-                    'mock-partner.hahacar.local',
+                    'demo-booking.hahakar.com',
+                    'mock-partner.hahakar.local',
                     'partner.therentalcars.test',
                     'localhost',
                     '127.0.0.1',

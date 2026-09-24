@@ -19,6 +19,26 @@ Route::get('/booking/{reference}', function ($reference) {
     return view('booking-show', ['reference' => $reference]);
 })->name('booking.show');
 
+// Customer Authentication & Dashboard
+Route::get('/customer/login', function () {
+    return view('customer-login');
+})->name('customer.login');
+
+Route::get('/customer/register', function () {
+    return view('customer-register');
+})->name('customer.register');
+
+Route::get('/customer/dashboard', function () {
+    return view('customer-dashboard');
+})->name('customer.dashboard');
+
+Route::get('/customer/logout', function () {
+    \Illuminate\Support\Facades\Auth::logout();
+    session()->invalidate();
+    session()->regenerateToken();
+    return redirect()->route('home');
+})->name('customer.logout');
+
 // Partner Driver & Fleet Onboarding
 Route::get('/partner/register', function () {
     return view('partner-register');

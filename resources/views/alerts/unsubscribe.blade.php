@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Price Alert Unsubscribed | Hahacar')
+@section('title', 'Price Alert Unsubscribed | Hahakar')
 
 @section('content')
 <div class="max-w-xl mx-auto px-4 py-16 text-center">
@@ -10,7 +10,7 @@
         </div>
         <h1 class="text-2xl font-bold text-slate-900 mb-2">You Have Been Unsubscribed</h1>
         <p class="text-sm text-slate-600 leading-relaxed mb-6">
-            You will no longer receive price drop notifications for this search. You can still set up new alerts anytime you search on Hahacar.
+            You will no longer receive price drop notifications for this search. You can still set up new alerts anytime you search on Hahakar.
         </p>
         <a href="{{ route('home') }}" wire:navigate class="inline-block bg-slate-900 hover:bg-slate-800 text-white font-semibold py-3 px-6 rounded-xl text-sm transition">
             Back to Home

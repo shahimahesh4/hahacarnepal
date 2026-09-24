@@ -28,90 +28,105 @@ class MockCarRentalProvider implements CarRentalProvider
 
         $vehicleTemplates = [
             [
-                'name' => 'Suzuki Swift or similar',
-                'category' => 'ECONOMY',
-                'seats' => 5,
-                'bags' => 2,
-                'doors' => 4,
-                'transmission' => 'manual',
-                'base_daily' => 350000, // Rs. 3,500
-                'image' => 'https://images.unsplash.com/photo-1590362891988-f77804702088?auto=format&fit=crop&w=1200&h=750&q=85',
-                'suppliers' => [
-                    ['name' => 'Kathmandu Wheels', 'rating' => 9.0, 'pickup' => 'terminal'],
-                    ['name' => 'Avis Nepal', 'rating' => 8.8, 'pickup' => 'terminal'],
-                    ['name' => 'Nepal Overland Express', 'rating' => 8.5, 'pickup' => 'shuttle'],
-                ],
-            ],
-            [
-                'name' => 'Hyundai Grand i10 or similar',
-                'category' => 'MINI',
-                'seats' => 4,
-                'bags' => 1,
-                'doors' => 4,
-                'transmission' => 'manual',
-                'base_daily' => 280000, // Rs. 2,800
-                'image' => 'https://images.unsplash.com/photo-1541899481282-d53bffe3c35d?auto=format&fit=crop&w=1200&h=750&q=85',
-                'suppliers' => [
-                    ['name' => 'Everest Tour Fleet', 'rating' => 8.7, 'pickup' => 'terminal'],
-                    ['name' => 'Kathmandu Wheels', 'rating' => 9.0, 'pickup' => 'terminal'],
-                ],
-            ],
-            [
-                'name' => 'Hyundai Creta or similar',
-                'category' => 'COMPACT',
-                'seats' => 5,
-                'bags' => 3,
-                'doors' => 5,
-                'transmission' => 'automatic',
-                'base_daily' => 550000, // Rs. 5,500
-                'image' => 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=1200&h=750&q=85',
-                'suppliers' => [
-                    ['name' => 'Himalayan Car Rental', 'rating' => 9.3, 'pickup' => 'terminal'],
-                    ['name' => 'Pokhara Drive Co.', 'rating' => 9.1, 'pickup' => 'terminal'],
-                    ['name' => 'Avis Nepal', 'rating' => 8.8, 'pickup' => 'shuttle'],
-                ],
-            ],
-            [
-                'name' => 'Mahindra Scorpio 4WD or similar',
+                'name' => 'Mahindra Scorpio 4WD S11',
                 'category' => 'SUV',
                 'seats' => 7,
                 'bags' => 4,
                 'doors' => 5,
                 'transmission' => 'manual',
-                'base_daily' => 750000, // Rs. 7,500
-                'image' => 'https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=1200&h=750&q=85',
+                'base_daily' => 550000, // Rs. 5,500
+                'image' => '/images/vehicles/scorpio.jpg',
+                'suppliers' => [
+                    ['name' => 'Himalayan Car Rental', 'rating' => 9.4, 'pickup' => 'terminal'],
+                    ['name' => 'Kathmandu Wheels', 'rating' => 9.1, 'pickup' => 'terminal'],
+                    ['name' => 'Pokhara Drive Co.', 'rating' => 9.0, 'pickup' => 'terminal'],
+                ],
+            ],
+            [
+                'name' => 'Suzuki Swift VXI',
+                'category' => 'ECONOMY',
+                'seats' => 5,
+                'bags' => 2,
+                'doors' => 4,
+                'transmission' => 'manual',
+                'base_daily' => 280000, // Rs. 2,800
+                'image' => '/images/vehicles/swift.jpg',
+                'suppliers' => [
+                    ['name' => 'Kathmandu Wheels', 'rating' => 9.1, 'pickup' => 'terminal'],
+                    ['name' => 'Pokhara Drive Co.', 'rating' => 8.9, 'pickup' => 'shuttle'],
+                    ['name' => 'Nepal Overland Express', 'rating' => 8.7, 'pickup' => 'terminal'],
+                ],
+            ],
+            [
+                'name' => 'Toyota HiAce Tourist Commuter (14 Seats)',
+                'category' => 'VAN',
+                'seats' => 14,
+                'bags' => 8,
+                'doors' => 4,
+                'transmission' => 'manual',
+                'base_daily' => 800000, // Rs. 8,000
+                'image' => '/images/vehicles/hiace.jpg',
+                'suppliers' => [
+                    ['name' => 'Himalayan Car Rental', 'rating' => 9.4, 'pickup' => 'terminal'],
+                    ['name' => 'Everest Tour Fleet', 'rating' => 9.2, 'pickup' => 'terminal'],
+                    ['name' => 'Annapurna Safari Fleets', 'rating' => 8.9, 'pickup' => 'shuttle'],
+                ],
+            ],
+            [
+                'name' => 'Hyundai Creta SX',
+                'category' => 'COMPACT',
+                'seats' => 5,
+                'bags' => 3,
+                'doors' => 5,
+                'transmission' => 'automatic',
+                'base_daily' => 420000, // Rs. 4,200
+                'image' => '/images/vehicles/creta.jpg',
                 'suppliers' => [
                     ['name' => 'Himalayan Car Rental', 'rating' => 9.3, 'pickup' => 'terminal'],
-                    ['name' => 'Pokhara Drive Co.', 'rating' => 9.1, 'pickup' => 'terminal'],
-                    ['name' => 'Kathmandu Wheels', 'rating' => 9.0, 'pickup' => 'terminal'],
+                    ['name' => 'Pokhara Drive Co.', 'rating' => 9.0, 'pickup' => 'terminal'],
+                    ['name' => 'Kathmandu Wheels', 'rating' => 8.8, 'pickup' => 'shuttle'],
                 ],
             ],
             [
                 'name' => 'Toyota Hilux 4x4 Double Cab',
                 'category' => 'FULLSIZE',
                 'seats' => 5,
-                'bags' => 4,
+                'bags' => 5,
                 'doors' => 4,
-                'transmission' => 'automatic',
-                'base_daily' => 1050000, // Rs. 10,500
-                'image' => 'https://images.unsplash.com/photo-1559416523-140ddc3d238c?auto=format&fit=crop&w=1200&h=750&q=85',
+                'transmission' => 'manual',
+                'base_daily' => 750000, // Rs. 7,500
+                'image' => '/images/vehicles/hilux.jpg',
                 'suppliers' => [
-                    ['name' => 'Avis Nepal', 'rating' => 8.9, 'pickup' => 'terminal'],
-                    ['name' => 'Nepal Overland Express', 'rating' => 8.6, 'pickup' => 'shuttle'],
+                    ['name' => 'Annapurna Safari Fleets', 'rating' => 9.3, 'pickup' => 'terminal'],
+                    ['name' => 'Nepal Overland Express', 'rating' => 8.9, 'pickup' => 'shuttle'],
                 ],
             ],
             [
-                'name' => 'Toyota HiAce Tourist Commuter',
-                'category' => 'VAN',
-                'seats' => 12,
-                'bags' => 6,
+                'name' => 'Hyundai Grand i10 Nios',
+                'category' => 'MINI',
+                'seats' => 4,
+                'bags' => 2,
                 'doors' => 4,
                 'transmission' => 'manual',
-                'base_daily' => 950000, // Rs. 9,500
-                'image' => 'https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?auto=format&fit=crop&w=1200&h=750&q=85',
+                'base_daily' => 250000, // Rs. 2,500
+                'image' => '/images/vehicles/swift.jpg',
                 'suppliers' => [
-                    ['name' => 'Himalayan Car Rental', 'rating' => 9.2, 'pickup' => 'terminal'],
-                    ['name' => 'Everest Tour Fleet', 'rating' => 8.7, 'pickup' => 'terminal'],
+                    ['name' => 'Kathmandu Wheels', 'rating' => 9.0, 'pickup' => 'terminal'],
+                    ['name' => 'Everest Tour Fleet', 'rating' => 8.8, 'pickup' => 'terminal'],
+                ],
+            ],
+            [
+                'name' => 'BYD Atto 3 EV (Electric SUV)',
+                'category' => 'INTERMEDIATE',
+                'seats' => 5,
+                'bags' => 3,
+                'doors' => 5,
+                'transmission' => 'automatic',
+                'base_daily' => 480000, // Rs. 4,800
+                'image' => '/images/vehicles/byd_atto3.jpg',
+                'suppliers' => [
+                    ['name' => 'Kathmandu Wheels', 'rating' => 9.2, 'pickup' => 'terminal'],
+                    ['name' => 'Pokhara Drive Co.', 'rating' => 9.1, 'pickup' => 'terminal'],
                 ],
             ],
             [
@@ -121,11 +136,11 @@ class MockCarRentalProvider implements CarRentalProvider
                 'bags' => 5,
                 'doors' => 5,
                 'transmission' => 'automatic',
-                'base_daily' => 1800000, // Rs. 18,000
-                'image' => 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1200&h=750&q=85',
+                'base_daily' => 1500000, // Rs. 15,000
+                'image' => '/images/vehicles/prado.jpg',
                 'suppliers' => [
-                    ['name' => 'Himalayan Car Rental', 'rating' => 9.4, 'pickup' => 'terminal'],
-                    ['name' => 'Avis Nepal', 'rating' => 9.0, 'pickup' => 'terminal'],
+                    ['name' => 'Himalayan Car Rental', 'rating' => 9.5, 'pickup' => 'terminal'],
+                    ['name' => 'Annapurna Safari Fleets', 'rating' => 9.3, 'pickup' => 'terminal'],
                 ],
             ],
         ];
@@ -137,12 +152,12 @@ class MockCarRentalProvider implements CarRentalProvider
             foreach ($template['suppliers'] as $supplier) {
                 // Generate slight price variance per supplier
                 $multiplier = match ($supplier['name']) {
-                    'Everest Tour Fleet' => 0.94,
-                    'Nepal Overland Express' => 0.97,
+                    'Everest Tour Fleet' => 0.95,
+                    'Nepal Overland Express' => 0.98,
                     'Kathmandu Wheels' => 1.0,
                     'Pokhara Drive Co.' => 1.02,
-                    'Avis Nepal' => 1.05,
-                    'Himalayan Car Rental' => 1.08,
+                    'Annapurna Safari Fleets' => 1.04,
+                    'Himalayan Car Rental' => 1.06,
                     default => 1.0,
                 };
 
@@ -179,10 +194,10 @@ class MockCarRentalProvider implements CarRentalProvider
                     fuelPolicy: 'full_to_full',
                     cancellationPolicy: 'free_cancellation',
                     cancellationDeadline: $criteria->pickupDatetime->copy()->subHours(48),
-                    depositMinor: 25000, // $250 deposit
-                    deepLinkUrl: "https://demo-booking.hahacar.com/checkout?offer_id={$externalId}",
+                    depositMinor: 200000, // Rs. 2,000 security deposit
+                    deepLinkUrl: "https://demo-booking.hahakar.com/checkout?offer_id={$externalId}",
                     expiresAt: Carbon::now()->addHours(2),
-                    isSponsored: ($offerCounter === 1) // first result demo commercial boost
+                    isSponsored: ($offerCounter === 1)
                 );
 
                 $offerCounter++;
@@ -212,7 +227,7 @@ class MockCarRentalProvider implements CarRentalProvider
 
     public function buildRedirectUrl(Offer $offer, AttributionData $attribution): string
     {
-        $baseUrl = "https://demo-booking.hahacar.com/reserve";
+        $baseUrl = "https://demo-booking.hahakar.com/reserve";
         $params = [
             'offer_id' => $offer->external_offer_id,
             'vehicle' => $offer->vehicle_name,
@@ -220,10 +235,10 @@ class MockCarRentalProvider implements CarRentalProvider
             'pickup' => $offer->search->pickupLocation->iata_code ?? $offer->search->pickupLocation->city,
             'from' => $offer->search->pickup_datetime->format('Y-m-d_H:i'),
             'to' => $offer->search->dropoff_datetime->format('Y-m-d_H:i'),
-            'sub_id' => $attribution->subId ?? 'hahacar_web',
-            'utm_source' => $attribution->utmSource ?? 'hahacar',
-            'utm_medium' => $attribution->utmMedium ?? 'metasearch',
-            'utm_campaign' => $attribution->utmCampaign ?? 'car_rental',
+            'sub_id' => $attribution->subId ?? 'hahakar_web',
+            'utm_source' => $attribution->utmSource ?? 'hahakar',
+            'utm_medium' => $attribution->utmMedium ?? 'direct',
+            'utm_campaign' => $attribution->utmCampaign ?? 'nepal_rentals',
         ];
 
         return $baseUrl . '?' . http_build_query($params);
@@ -233,8 +248,8 @@ class MockCarRentalProvider implements CarRentalProvider
     {
         return new ProviderHealth(
             status: 'healthy',
-            latencyMs: 45,
-            message: 'Mock Provider Sandbox API responsive'
+            latencyMs: 35,
+            message: 'Nepal Fleet Provider Engine responsive'
         );
     }
 }

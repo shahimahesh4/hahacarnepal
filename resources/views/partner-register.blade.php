@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Partner Driver & Vehicle Owner Registration - Hahacar Nepal')
-@section('meta_description', 'Sign up as a vehicle owner or driver partner with Hahacar Nepal. Submit your license and bluebook, get verified, and start earning from car bookings.')
+@section('title', 'Partner Driver & Vehicle Owner Registration - Hahakar Nepal')
+@section('meta_description', 'Sign up as a vehicle owner or driver partner with Hahakar Nepal. Submit your license and bluebook, get verified, and start earning from car bookings.')
 
 @section('content')
 <div class="relative bg-gradient-to-b from-[#0a1128] via-[#0f172a] to-[#1e293b] text-white py-12 md:py-16 min-h-screen overflow-hidden">

@@ -26,10 +26,9 @@
         <div class="p-6 md:p-8 bg-gradient-to-r from-emerald-950 via-slate-900 to-slate-900 border-b border-white/10">
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div>
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-600 text-slate-950 font-black text-base shadow-lg shadow-emerald-500/30">H</span>
-                        <span class="font-extrabold text-xl tracking-tight text-white">HAHACAR<span class="text-emerald-400">.COM</span></span>
-                        <span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30">NEPAL</span>
+                    <div class="flex items-center gap-3 mb-2">
+                        <img src="{{ asset('images/logo.png') }}" alt="Hahakar Nepal" class="h-12 sm:h-14 w-auto object-contain bg-white rounded-2xl px-3 py-1 shadow-md">
+                        <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30 uppercase tracking-wider text-[10px]">Verified Voucher</span>
                     </div>
                     <h1 class="text-2xl font-black text-white">Booking Confirmation Voucher</h1>
                     <p class="text-xs text-slate-400 mt-1">Thank you, {{ $booking->customer_name }}. Your reservation has been recorded in our system.</p>
@@ -74,7 +73,7 @@
                 <!-- Vehicle -->
                 <div class="flex items-start gap-4">
                     <img
-                        src="{{ $booking->vehicle->vehicle_photo_path ?? 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=400&q=80' }}"
+                        src="{{ $booking->vehicle->vehicle_photo_path ? asset($booking->vehicle->vehicle_photo_path) : asset('images/vehicles/scorpio.jpg') }}"
                         alt="{{ $booking->vehicle->title }}"
                         class="w-28 h-20 rounded-2xl object-contain bg-slate-900/90 p-1.5 border border-white/10 shrink-0"
                     />
@@ -153,14 +152,29 @@
             <div class="p-6 rounded-2xl bg-slate-950/40 border border-white/5">
                 <h4 class="text-sm font-bold text-white uppercase tracking-wider mb-4">Fare & Billing Breakdown</h4>
                 <div class="space-y-2 text-sm">
-                    <div class="flex justify-between text-slate-400">
-                        <span>Daily Rate</span>
-                        <span class="text-white">{{ $booking->formatted_daily_rate }} / day</span>
-                    </div>
-                    <div class="flex justify-between text-slate-400">
-                        <span>Rental Duration</span>
-                        <span class="text-white">{{ $booking->total_days }} {{ Str::plural('Day', $booking->total_days) }}</span>
-                    </div>
+                    @if ($booking->is_distance_trip)
+                        <div class="flex justify-between text-slate-400">
+                            <span>Pricing Mode</span>
+                            <span class="text-emerald-400 font-bold">🛣️ Distance / KM Trip</span>
+                        </div>
+                        <div class="flex justify-between text-slate-400">
+                            <span>Fuel Type & Rate</span>
+                            <span class="text-white">{{ $booking->fuel_badge }} • {{ $booking->formatted_rate_per_km }}</span>
+                        </div>
+                        <div class="flex justify-between text-slate-400">
+                            <span>Estimated Distance</span>
+                            <span class="text-white">{{ $booking->estimated_distance_km }} km</span>
+                        </div>
+                    @else
+                        <div class="flex justify-between text-slate-400">
+                            <span>Daily Rate</span>
+                            <span class="text-white">{{ $booking->formatted_daily_rate }} / day</span>
+                        </div>
+                        <div class="flex justify-between text-slate-400">
+                            <span>Rental Duration</span>
+                            <span class="text-white">{{ $booking->total_days }} {{ Str::plural('Day', $booking->total_days) }}</span>
+                        </div>
+                    @endif
                     <div class="flex justify-between text-slate-400">
                         <span>Payment Method</span>
                         <span class="text-white uppercase font-semibold">{{ $booking->payment_method === 'cash' ? 'Cash on Pickup' : $booking->payment_method }}</span>

@@ -149,6 +149,9 @@ class SearchForm extends Component
         return view('livewire.search-form', [
             'pickupLocations' => $pickupLocations,
             'dropoffLocations' => $dropoffLocations,
+            'locationMode' => \App\Models\Setting::get('location_provider_mode', 'manual'),
+            'googleMapsApiKey' => \App\Models\Setting::get('google_maps_api_key', ''),
+            'googleMapsCountry' => \App\Models\Setting::get('google_maps_default_country', 'np'),
         ]);
     }
 }

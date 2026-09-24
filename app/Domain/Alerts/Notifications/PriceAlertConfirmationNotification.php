@@ -28,9 +28,9 @@ class PriceAlertConfirmationNotification extends Notification
         $dates = $this->alert->pickup_datetime->format('M d, Y') . ' to ' . $this->alert->dropoff_datetime->format('M d, Y');
 
         return (new MailMessage)
-            ->subject("Confirm Your Hahacar Price Alert: {$pickup}")
+            ->subject("Confirm Your Hahakar Price Alert: {$pickup}")
             ->greeting("Hello!")
-            ->line("You requested a price alert on Hahacar for car rentals in **{$pickup}** from **{$dates}**.")
+            ->line("You requested a price alert on Hahakar for car rentals in **{$pickup}** from **{$dates}**.")
             ->line("Please confirm your subscription by clicking the button below:")
             ->action('Confirm Price Alert', $confirmUrl)
             ->line("We will monitor rates across car-rental providers and email you as soon as prices drop.")

@@ -54,7 +54,7 @@ class AdminPartnerVerificationTest extends TestCase
         $this->actingAs($admin);
 
         // Access admin drivers list
-        $response = $this->get('/admin/drivers');
+        $response = $this->get('/stnapanel/drivers');
         $response->assertStatus(200);
         $response->assertSee('Kiran Thapa');
 

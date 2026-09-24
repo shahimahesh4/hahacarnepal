@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Partner Driver Portal - Hahacar Nepal')
+@section('title', 'Partner Driver Portal - Hahakar Nepal')
 
 @section('content')
 <div class="relative bg-gradient-to-b from-[#0a1128] via-[#0f172a] to-[#1e293b] text-white py-12 md:py-16 min-h-screen overflow-hidden">

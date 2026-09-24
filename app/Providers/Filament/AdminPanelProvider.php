@@ -25,9 +25,12 @@ class AdminPanelProvider extends PanelProvider
         return $panel
             ->default()
             ->id('admin')
-            ->path('admin')
+            ->path('stnapanel')
             ->login()
-            ->brandName('Hahacar Operations')
+            ->brandName('Hahakar Operations')
+            ->brandLogo(asset('images/logo.png'))
+            ->brandLogoHeight('2.75rem')
+            ->favicon(asset('images/logo.png'))
             ->colors([
                 'primary' => Color::Emerald,
             ])

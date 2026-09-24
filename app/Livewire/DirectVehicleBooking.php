@@ -21,6 +21,11 @@ class DirectVehicleBooking extends Component
     public bool $filter4wd = false;
     public string $filterTransmission = 'all';
 
+    public string $pricingType = 'daily'; // 'daily', 'distance'
+    public int $estimatedDistanceKm = 100;
+    public bool $hasSearched = false;
+    public string $searchMessage = '';
+
     // Booking Modal
     public ?int $selectedVehicleId = null;
     public bool $isBookingModalOpen = false;
@@ -49,6 +54,61 @@ class DirectVehicleBooking extends Component
     {
         $this->pickupDate = Carbon::now()->addDay()->format('Y-m-d');
         $this->returnDate = Carbon::now()->addDays(4)->format('Y-m-d');
+        $this->recalculateDistance();
+    }
+
+    public function updatedPickupLocation(): void
+    {
+        $this->recalculateDistance();
+    }
+
+    public function updatedReturnLocation(): void
+    {
+        $this->recalculateDistance();
+    }
+
+    public function updatedSameDropoff(): void
+    {
+        $this->recalculateDistance();
+    }
+
+    public function setPricingType(string $type): void
+    {
+        $this->pricingType = $type;
+    }
+
+    public function setDistance(int $km): void
+    {
+        $this->estimatedDistanceKm = max(10, $km);
+    }
+
+    public function incrementDistance(int $amount = 25): void
+    {
+        $this->estimatedDistanceKm = min(2000, $this->estimatedDistanceKm + $amount);
+    }
+
+    public function decrementDistance(int $amount = 25): void
+    {
+        $this->estimatedDistanceKm = max(10, $this->estimatedDistanceKm - $amount);
+    }
+
+    public function searchFleet(): void
+    {
+        $this->recalculateDistance();
+        $this->hasSearched = true;
+        $mode = $this->serviceOption === 'with_driver' ? 'Chauffeur' : 'Self-Drive';
+        $duration = $this->pricingType === 'daily' ? "{$this->totalDays} Days" : "{$this->estimatedDistanceKm} KM";
+        $this->searchMessage = "Showing verified {$mode} fleet for {$this->pickupLocation} ({$duration})";
+        $this->dispatch('scroll-to-fleet');
+    }
+
+    protected function recalculateDistance(): void
+    {
+        $dropoff = $this->sameDropoff ? $this->pickupLocation : $this->returnLocation;
+        $this->estimatedDistanceKm = \App\Domain\Pricing\Services\NepalDistanceService::estimateDistanceKm(
+            $this->pickupLocation,
+            $dropoff
+        );
     }
 
     public function getTotalDaysProperty(): int
@@ -85,7 +145,15 @@ class DirectVehicleBooking extends Component
 
         $vehicle = Vehicle::with('driverProfile')->findOrFail($this->selectedVehicleId);
         $totalDays = $this->totalDays;
-        $totalPrice = $vehicle->daily_rate * $totalDays;
+        
+        $ratePerKm = $vehicle->effective_rate_per_km;
+        $totalPrice = \App\Domain\Pricing\Services\NepalDistanceService::calculateTripPrice(
+            $this->pricingType,
+            $vehicle->daily_rate,
+            $totalDays,
+            $ratePerKm,
+            $this->estimatedDistanceKm
+        );
 
         $pickupLoc = $this->pickupLocation;
         if (!empty($this->pickupAddress)) {
@@ -102,6 +170,10 @@ class DirectVehicleBooking extends Component
             'customer_phone' => $this->customerPhone,
             'customer_email' => $this->customerEmail,
             'service_option' => $this->serviceOption,
+            'pricing_type' => $this->pricingType,
+            'estimated_distance_km' => $this->pricingType === 'distance' ? $this->estimatedDistanceKm : null,
+            'rate_per_km' => $ratePerKm,
+            'fuel_type' => $vehicle->fuel_type,
             'pickup_location' => $pickupLoc,
             'return_location' => $dropoffLoc,
             'pickup_date' => Carbon::parse("{$this->pickupDate} {$this->pickupTime}"),
@@ -145,7 +217,13 @@ class DirectVehicleBooking extends Component
             $query->where('transmission', $this->filterTransmission);
         }
 
-        $vehicles = $query->orderBy('daily_rate')->get();
+        $selectedCity = \App\Domain\Pricing\Services\NepalDistanceService::extractCity($this->pickupLocation);
+
+        $vehicles = $query->get()->sortBy(function ($vehicle) use ($selectedCity) {
+            $vehCity = strtolower($vehicle->driverProfile->service_city ?? '');
+            $isExactMatch = str_contains($vehCity, $selectedCity) || str_contains($selectedCity, $vehCity);
+            return $isExactMatch ? 0 : 1;
+        })->values();
 
         $selectedVehicle = $this->selectedVehicleId ? Vehicle::with('driverProfile.user')->find($this->selectedVehicleId) : null;
 
@@ -153,6 +231,19 @@ class DirectVehicleBooking extends Component
             'vehicles' => $vehicles,
             'selectedVehicle' => $selectedVehicle,
             'totalDays' => $this->totalDays,
+            'currentCity' => ucfirst($selectedCity),
+            'locationMode' => \App\Models\Setting::get('location_provider_mode', 'manual'),
+            'googleMapsApiKey' => \App\Models\Setting::get('google_maps_api_key', ''),
+            'googleMapsCountry' => \App\Models\Setting::get('google_maps_default_country', 'np'),
+            'siteName' => \App\Models\Setting::get('site_name', 'Hahakar Nepal'),
+            'currency' => \App\Models\Setting::get('default_currency', 'NPR'),
+            'enableCash' => (bool) \App\Models\Setting::get('enable_cash_on_pickup', true),
+            'enableEsewa' => (bool) \App\Models\Setting::get('enable_esewa', true),
+            'enableKhalti' => (bool) \App\Models\Setting::get('enable_khalti', true),
+            'ratePetrol' => \App\Domain\Pricing\Services\NepalDistanceService::getRatePerKmForFuelType('petrol'),
+            'rateDiesel' => \App\Domain\Pricing\Services\NepalDistanceService::getRatePerKmForFuelType('diesel'),
+            'rateElectric' => \App\Domain\Pricing\Services\NepalDistanceService::getRatePerKmForFuelType('electric'),
+            'rateHybrid' => \App\Domain\Pricing\Services\NepalDistanceService::getRatePerKmForFuelType('hybrid'),
         ]);
     }
 }

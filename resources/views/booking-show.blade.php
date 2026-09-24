@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Reservation Voucher - Hahacar Nepal')
+@section('title', 'Reservation Voucher - Hahakar Nepal')
 
 @section('content')
 <div class="relative bg-gradient-to-b from-[#0a1128] via-[#0f172a] to-[#1e293b] text-white py-12 md:py-16 min-h-screen overflow-hidden">
