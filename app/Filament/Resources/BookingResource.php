@@ -141,8 +141,15 @@ class BookingResource extends Resource
                     ->dateTime('M d, Y H:i')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('total_price')
-                    ->label('Total Price')
+                    ->label('Total Price (NPR)')
                     ->formatStateUsing(fn ($state) => 'Rs. ' . number_format($state))
+                    ->description(function (Booking $record) {
+                        $driverPct = (float) \App\Models\Setting::get('driver_payout_percentage', 85);
+                        $adminPct = (float) \App\Models\Setting::get('admin_commission_percentage', 15);
+                        $driverAmt = round($record->total_price * ($driverPct / 100));
+                        $adminAmt = round($record->total_price * ($adminPct / 100));
+                        return "Driver ({$driverPct}%): Rs. " . number_format($driverAmt) . " | Admin ({$adminPct}%): Rs. " . number_format($adminAmt);
+                    })
                     ->weight('bold')
                     ->sortable(),
                 Tables\Columns\BadgeColumn::make('status')

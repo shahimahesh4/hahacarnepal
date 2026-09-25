@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'Hahakar - Nepal\'s #1 Car Rental Comparison & Direct Booking')
-@section('meta_description', 'Compare car rental prices and book verified vehicles across Kathmandu, Pokhara, Chitwan, Lumbini, and Mustang. Scorpio 4WD, Toyota Hilux, Swift, and HiAce tourist vans with transparent NPR pricing.')
+@section('title', \App\Models\Setting::get('seo_meta_title', 'Hahakar - Nepal\'s #1 Car Rental Comparison & Direct Booking'))
+@section('meta_description', \App\Models\Setting::get('seo_meta_description', 'Compare car rental prices & book verified vehicles across Kathmandu, Pokhara, Chitwan, Lumbini, and all of Nepal. Scorpio 4WD, Toyota Hilux, Creta, Swift, and HiAce tourist vans with transparent NPR rates.'))
 
 @section('content')
 <!-- Hero Section with Himalayan Night Gradient -->
@@ -23,9 +23,7 @@
                 <span class="sm:whitespace-nowrap">Compare Car Rentals in Nepal.</span> <br class="hidden sm:inline">
                 <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-300">Travel Free, Save Big.</span>
             </h1>
-            <p class="text-sm sm:text-base lg:text-lg text-slate-300 max-w-3xl mx-auto font-normal leading-relaxed">
-                Book verified vehicles across Nepal with transparent NPR rates and zero hidden charges. From mountain-ready <strong class="text-white">Mahindra Scorpio 4WDs</strong> and <strong class="text-white">Toyota HiAce</strong> vans to city hatchbacks and electric EVs.
-            </p>
+
 
             <!-- Key Platform Highlights -->
             <div class="mt-6 flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-xs font-bold text-slate-300">

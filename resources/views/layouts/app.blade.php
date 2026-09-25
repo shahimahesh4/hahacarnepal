@@ -5,12 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'Hahakar - Nepal\'s #1 Car Rental & Mobility Platform')</title>
-    <meta name="description" content="@yield('meta_description', 'Compare car rental rates & book verified vehicles across Kathmandu, Pokhara, Chitwan, Lumbini, and all of Nepal. Scorpio 4WD, Hilux, Swift, and HiAce tourist vans with transparent NPR pricing.')">
+    @php
+        $siteName = \App\Models\Setting::get('site_name', 'Hahakar Nepal');
+        $defaultTitle = \App\Models\Setting::get('seo_meta_title', 'Hahakar - Nepal\'s #1 Car Rental Comparison & Direct Booking');
+        $defaultDescription = \App\Models\Setting::get('seo_meta_description', 'Compare car rental prices & book verified vehicles across Kathmandu, Pokhara, Chitwan, Lumbini, and all of Nepal. Scorpio 4WD, Toyota Hilux, Creta, Swift, and HiAce tourist vans with transparent NPR rates.');
+        $metaKeywords = \App\Models\Setting::get('seo_meta_keywords', 'car rental nepal, scorpio rental kathmandu, self drive car pokhara, hiace rental nepal, rent a car nepal, cheap car hire kathmandu');
+        $robotsDirective = \App\Models\Setting::get('seo_robots', 'index, follow, max-image-preview:large');
+        $themeColor = \App\Models\Setting::get('seo_theme_color', '#070d1e');
+        $ogLocale = \App\Models\Setting::get('seo_og_locale', 'en_NP');
+        $twitterCard = \App\Models\Setting::get('seo_twitter_card', 'summary_large_image');
+        $defaultOgImage = \App\Models\Setting::get('seo_og_image', '/images/vehicles/scorpio.jpg');
 
-    <!-- Favicon & Icons -->
+        $pageTitle = trim($__env->yieldContent('title', $defaultTitle));
+        $pageDescription = trim($__env->yieldContent('meta_description', $defaultDescription));
+        $pageCanonical = trim($__env->yieldContent('canonical', url()->current()));
+        $pageOgType = trim($__env->yieldContent('og_type', 'website'));
+        $rawOgImage = trim($__env->yieldContent('og_image', $defaultOgImage));
+        $pageOgImage = str_starts_with($rawOgImage, 'http') ? $rawOgImage : url($rawOgImage);
+    @endphp
+
+    <title>{{ $pageTitle }}</title>
+    <meta name="description" content="{{ $pageDescription }}">
+    <meta name="keywords" content="{{ $metaKeywords }}">
+    <meta name="robots" content="{{ $robotsDirective }}">
+    <meta name="theme-color" content="{{ $themeColor }}">
+    <link rel="canonical" href="{{ $pageCanonical }}">
+
+    <!-- Favicons & Icons -->
     <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
-    <link rel="apple-touch-icon" href="{{ asset('images/logo.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('images/logo.png') }}">
+
+    <!-- Open Graph (Facebook, WhatsApp, LinkedIn) -->
+    <meta property="og:type" content="{{ $pageOgType }}">
+    <meta property="og:title" content="{{ $pageTitle }}">
+    <meta property="og:description" content="{{ $pageDescription }}">
+    <meta property="og:url" content="{{ $pageCanonical }}">
+    <meta property="og:site_name" content="{{ $siteName }}">
+    <meta property="og:locale" content="{{ $ogLocale }}">
+    <meta property="og:image" content="{{ $pageOgImage }}">
+    <meta property="og:image:alt" content="{{ $pageTitle }}">
+
+    <!-- Twitter Card Meta -->
+    <meta name="twitter:card" content="{{ $twitterCard }}">
+    <meta name="twitter:title" content="{{ $pageTitle }}">
+    <meta name="twitter:description" content="{{ $pageDescription }}">
+    <meta name="twitter:url" content="{{ $pageCanonical }}">
+    <meta name="twitter:image" content="{{ $pageOgImage }}">
+    <meta name="twitter:image:alt" content="{{ $pageTitle }}">
 
     <!-- Premium Typography: Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">

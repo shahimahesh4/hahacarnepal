@@ -7,6 +7,7 @@ use Filament\Actions\Action;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Section;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\Textarea;
@@ -41,6 +42,20 @@ class ManageWebsiteSettings extends Page implements HasForms
             'support_phone' => Setting::get('support_phone', '+977 9801-HAHAKAR'),
             'store_address' => Setting::get('store_address', 'Thamel Tourist Center, Kathmandu, Bagmati Province, Nepal'),
             'default_currency' => Setting::get('default_currency', 'NPR'),
+
+            // Revenue Split & Commission
+            'driver_payout_percentage' => Setting::get('driver_payout_percentage', '85'),
+            'admin_commission_percentage' => Setting::get('admin_commission_percentage', '15'),
+
+            // SEO & Social Meta Configuration
+            'seo_meta_title' => Setting::get('seo_meta_title', 'Hahakar - Nepal\'s #1 Car Rental Comparison & Direct Booking'),
+            'seo_meta_description' => Setting::get('seo_meta_description', 'Compare car rental prices & book verified vehicles across Kathmandu, Pokhara, Chitwan, Lumbini, and all of Nepal. Scorpio 4WD, Toyota Hilux, Creta, Swift, and HiAce tourist vans with transparent NPR rates.'),
+            'seo_meta_keywords' => Setting::get('seo_meta_keywords', 'car rental nepal, scorpio rental kathmandu, self drive car pokhara, hiace rental nepal, rent a car nepal, cheap car hire kathmandu, ev car rental nepal'),
+            'seo_robots' => Setting::get('seo_robots', 'index, follow, max-image-preview:large'),
+            'seo_theme_color' => Setting::get('seo_theme_color', '#070d1e'),
+            'seo_og_locale' => Setting::get('seo_og_locale', 'en_NP'),
+            'seo_og_image' => Setting::get('seo_og_image', '/images/vehicles/scorpio.jpg'),
+            'seo_twitter_card' => Setting::get('seo_twitter_card', 'summary_large_image'),
 
             // Distance & Fuel Rates
             'rate_per_km_electric' => Setting::get('rate_per_km_electric', '70'),
@@ -122,7 +137,141 @@ class ManageWebsiteSettings extends Page implements HasForms
                                     ]),
                             ]),
 
-                        // Tab 2: Distance & Fuel Rates
+                        // Tab 2: Revenue Split & Commission
+                        Tab::make('Revenue & Commission')
+                            ->icon('heroicon-o-banknotes')
+                            ->schema([
+                                Section::make('Driver & Platform Owner Revenue Share')
+                                    ->description('Configure the percentage split between verified Partner Drivers and the Platform Owner on all completed reservations.')
+                                    ->schema([
+                                        Grid::make(2)
+                                            ->schema([
+                                                TextInput::make('driver_payout_percentage')
+                                                    ->label('🚘 Driver / Partner Payout Share (%)')
+                                                    ->numeric()
+                                                    ->minValue(0)
+                                                    ->maxValue(100)
+                                                    ->suffix('%')
+                                                    ->default(85)
+                                                    ->helperText('Percentage of total reservation fee disbursed directly to partner driver (e.g., 85%).')
+                                                    ->required(),
+
+                                                TextInput::make('admin_commission_percentage')
+                                                    ->label('🏢 Admin / Platform Owner Commission (%)')
+                                                    ->numeric()
+                                                    ->minValue(0)
+                                                    ->maxValue(100)
+                                                    ->suffix('%')
+                                                    ->default(15)
+                                                    ->helperText('Percentage of total reservation fee retained by Hahakar as platform commission (e.g., 15%).')
+                                                    ->required(),
+                                            ]),
+
+                                        Section::make('💡 Live Calculation Example')
+                                            ->description('Calculation breakdown on a standard Rs. 10,000 reservation:')
+                                            ->schema([
+                                                Grid::make(3)
+                                                    ->schema([
+                                                        TextInput::make('calc_example_total')
+                                                            ->label('Total Customer Payment')
+                                                            ->default('Rs. 10,000 (100%)')
+                                                            ->disabled()
+                                                            ->dehydrated(false),
+
+                                                        TextInput::make('calc_example_driver')
+                                                            ->label('Driver Payout Share')
+                                                            ->default('Rs. 8,500 (85%)')
+                                                            ->disabled()
+                                                            ->dehydrated(false),
+
+                                                        TextInput::make('calc_example_admin')
+                                                            ->label('Admin Owner Commission')
+                                                            ->default('Rs. 1,500 (15%)')
+                                                            ->disabled()
+                                                            ->dehydrated(false),
+                                                    ]),
+                                            ])
+                                            ->collapsible(),
+                                    ]),
+                            ]),
+
+                        // Tab 3: SEO & Social Meta
+                        Tab::make('SEO & Social Meta')
+                            ->icon('heroicon-o-globe-alt')
+                            ->schema([
+                                Section::make('Search Engine Optimization (SEO)')
+                                    ->description('Global meta tags, indexing directives, and search snippet controls for Google, Bing, and search crawlers.')
+                                    ->schema([
+                                        TextInput::make('seo_meta_title')
+                                            ->label('Default Meta Title')
+                                            ->required()
+                                            ->placeholder('Hahakar - Nepal\'s #1 Car Rental Comparison & Direct Booking')
+                                            ->helperText('Primary title displayed in Google search results and browser tabs.'),
+
+                                        Textarea::make('seo_meta_description')
+                                            ->label('Default Meta Description')
+                                            ->rows(3)
+                                            ->required()
+                                            ->placeholder('Compare car rental prices & book verified vehicles across Nepal...')
+                                            ->helperText('Search snippet summary (optimal length: 150-160 characters).'),
+
+                                        TextInput::make('seo_meta_keywords')
+                                            ->label('Meta Keywords (Comma separated)')
+                                            ->placeholder('car rental nepal, scorpio rental kathmandu, self drive pokhara, hiace hire')
+                                            ->helperText('Comma-separated list of keywords for regional and crawler indexing.'),
+
+                                        Grid::make(2)
+                                            ->schema([
+                                                Select::make('seo_robots')
+                                                    ->label('Robots Indexing Directive')
+                                                    ->options([
+                                                        'index, follow, max-image-preview:large' => 'Index, Follow (Recommended - Max Image Preview)',
+                                                        'index, follow' => 'Index, Follow',
+                                                        'noindex, follow' => 'NoIndex, Follow (Private/Staging with crawler links)',
+                                                        'noindex, nofollow' => 'NoIndex, NoFollow (Completely Private)',
+                                                    ])
+                                                    ->required()
+                                                    ->default('index, follow, max-image-preview:large'),
+
+                                                TextInput::make('seo_theme_color')
+                                                    ->label('Mobile Browser Theme Color (HEX)')
+                                                    ->placeholder('#070d1e')
+                                                    ->default('#070d1e')
+                                                    ->helperText('Status bar / address bar color on mobile browsers (e.g., #070d1e, #059669).'),
+                                            ]),
+                                    ]),
+
+                                Section::make('Social Sharing Meta (Open Graph & Twitter Card)')
+                                    ->description('Configure rich card previews when links are shared on WhatsApp, Facebook, LinkedIn, Twitter/X, and Telegram.')
+                                    ->schema([
+                                        Grid::make(2)
+                                            ->schema([
+                                                Select::make('seo_twitter_card')
+                                                    ->label('Twitter Card Format')
+                                                    ->options([
+                                                        'summary_large_image' => 'Large Image Card (Recommended)',
+                                                        'summary' => 'Standard Compact Summary',
+                                                    ])
+                                                    ->required()
+                                                    ->default('summary_large_image'),
+
+                                                TextInput::make('seo_og_locale')
+                                                    ->label('Open Graph Locale')
+                                                    ->placeholder('en_NP')
+                                                    ->default('en_NP')
+                                                    ->helperText('Language and regional locale (e.g., en_NP, ne_NP, en_US).'),
+                                            ]),
+
+                                        TextInput::make('seo_og_image')
+                                            ->label('Default Social Share Image URL / Relative Path')
+                                            ->placeholder('/images/vehicles/scorpio.jpg')
+                                            ->default('/images/vehicles/scorpio.jpg')
+                                            ->helperText('Representative hero image for Facebook / WhatsApp / Twitter social previews.')
+                                            ->columnSpanFull(),
+                                    ]),
+                            ]),
+
+                        // Tab 4: Distance & Fuel Rates
                         Tab::make('Distance & Fuel')
                             ->icon('heroicon-o-truck')
                             ->schema([
@@ -329,7 +478,21 @@ class ManageWebsiteSettings extends Page implements HasForms
         Setting::set('store_address', $state['store_address'], 'contact', 'Store physical office address in Nepal');
         Setting::set('default_currency', $state['default_currency'], 'general', 'Default platform currency');
 
-        // 2. Distance & Fuel
+        // 2. Revenue Split & Commission
+        Setting::set('driver_payout_percentage', $state['driver_payout_percentage'] ?? '85', 'commission', 'Driver payout percentage (0-100%)');
+        Setting::set('admin_commission_percentage', $state['admin_commission_percentage'] ?? '15', 'commission', 'Admin platform owner commission percentage (0-100%)');
+
+        // 3. SEO & Social Meta
+        Setting::set('seo_meta_title', $state['seo_meta_title'] ?? '', 'seo', 'Default website meta title');
+        Setting::set('seo_meta_description', $state['seo_meta_description'] ?? '', 'seo', 'Default website meta description');
+        Setting::set('seo_meta_keywords', $state['seo_meta_keywords'] ?? '', 'seo', 'Default website meta keywords');
+        Setting::set('seo_robots', $state['seo_robots'] ?? 'index, follow, max-image-preview:large', 'seo', 'Robots indexing directive');
+        Setting::set('seo_theme_color', $state['seo_theme_color'] ?? '#070d1e', 'seo', 'Mobile browser theme color');
+        Setting::set('seo_twitter_card', $state['seo_twitter_card'] ?? 'summary_large_image', 'seo', 'Twitter card preview format');
+        Setting::set('seo_og_locale', $state['seo_og_locale'] ?? 'en_NP', 'seo', 'Open Graph regional locale');
+        Setting::set('seo_og_image', $state['seo_og_image'] ?? '/images/vehicles/scorpio.jpg', 'seo', 'Default Open Graph and Twitter share image path');
+
+        // 4. Distance & Fuel
         Setting::set('rate_per_km_electric', $state['rate_per_km_electric'], 'distance_pricing', 'Rate per km for Electric EVs (Rs./km)');
         Setting::set('rate_per_km_petrol', $state['rate_per_km_petrol'], 'distance_pricing', 'Rate per km for Petrol vehicles (Rs./km)');
         Setting::set('rate_per_km_diesel', $state['rate_per_km_diesel'], 'distance_pricing', 'Rate per km for Diesel vehicles (Rs./km)');

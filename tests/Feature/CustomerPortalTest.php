@@ -222,4 +222,65 @@ class CustomerPortalTest extends TestCase
 
         $this->assertEquals('cancelled', $alert->fresh()->status);
     }
+
+    public function test_partner_can_view_revenue_split_calculation_tab(): void
+    {
+        $partnerUser = User::factory()->create([
+            'name' => 'Bikash Gurung',
+            'email' => 'bikash@hahakar.com',
+            'role' => 'driver',
+        ]);
+
+        $profile = DriverProfile::create([
+            'user_id' => $partnerUser->id,
+            'partner_type' => 'individual_driver',
+            'status' => 'verified',
+            'service_city' => 'Kathmandu',
+            'license_number' => 'DL-9999-NP',
+        ]);
+
+        $vehicle = Vehicle::create([
+            'driver_profile_id' => $profile->id,
+            'category' => 'suv',
+            'make' => 'Mahindra',
+            'model' => 'Scorpio',
+            'year' => 2024,
+            'plate_number' => 'BA 12 PA 9999',
+            'seating_capacity' => 7,
+            'luggage_capacity' => 4,
+            'transmission' => 'manual',
+            'fuel_type' => 'diesel',
+            'daily_rate' => 10000,
+            'rate_per_km' => 250,
+            'is_active' => true,
+        ]);
+
+        Booking::create([
+            'booking_reference' => 'HHK-BK-SPLIT1',
+            'vehicle_id' => $vehicle->id,
+            'driver_profile_id' => $profile->id,
+            'customer_name' => 'Aayush Shrestha',
+            'customer_email' => 'aayush@example.com',
+            'customer_phone' => '9841000000',
+            'pickup_location' => 'Kathmandu',
+            'return_location' => 'Pokhara',
+            'pickup_date' => now()->subDays(2),
+            'return_date' => now()->subDays(1),
+            'total_days' => 1,
+            'daily_rate' => 10000,
+            'total_price' => 10000,
+            'status' => 'completed',
+            'payment_method' => 'cash',
+            'payment_status' => 'paid',
+        ]);
+
+        $this->actingAs($partnerUser);
+
+        Livewire::test('partner-dashboard')
+            ->set('activeTab', 'earnings')
+            ->assertSee('Revenue')
+            ->assertSee('Rs. 10,000')
+            ->assertSee('Rs. 8,500') // 85% Driver share
+            ->assertSee('Rs. 1,500'); // 15% Admin Owner share
+    }
 }

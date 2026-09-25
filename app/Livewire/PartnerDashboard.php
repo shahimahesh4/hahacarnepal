@@ -4,6 +4,7 @@ namespace App\Livewire;
 
 use App\Models\Booking;
 use App\Models\DriverProfile;
+use App\Models\Setting;
 use App\Models\Vehicle;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -14,6 +15,9 @@ class PartnerDashboard extends Component
     public string $email = '';
     public string $password = '';
     public bool $isAuthenticated = false;
+
+    // Active Navigation Tab
+    public string $activeTab = 'trips'; // 'trips', 'earnings', 'profile'
 
     // Add Vehicle Modal Form
     public bool $isAddVehicleModalOpen = false;
@@ -42,6 +46,11 @@ class PartnerDashboard extends Component
         if (Auth::check() && Auth::user()->isPartner()) {
             $this->loadPartnerProfile();
         }
+    }
+
+    public function setActiveTab(string $tab): void
+    {
+        $this->activeTab = $tab;
     }
 
     protected function loadPartnerProfile(): void
@@ -212,20 +221,47 @@ class PartnerDashboard extends Component
 
     public function render()
     {
-        $totalEarnings = 0;
+        $driverPct = (float) Setting::get('driver_payout_percentage', 85);
+        $adminPct = (float) Setting::get('admin_commission_percentage', 15);
+
+        $totalGrossEarnings = 0;
+        $driverNetEarnings = 0;
+        $adminCommissionTotal = 0;
         $pendingBookingsCount = 0;
         $activeVehiclesCount = 0;
+        $completedTripsCount = 0;
+
+        $bookingsWithSplit = collect();
 
         if ($this->profile) {
-            $totalEarnings = $this->profile->bookings->where('status', 'completed')->sum('total_price');
-            $pendingBookingsCount = $this->profile->bookings->where('status', 'pending')->count();
-            $activeVehiclesCount = $this->profile->vehicles->where('is_active', true)->count();
+            $bookings = $this->profile->bookings()->with('vehicle')->latest()->get();
+            $completedBookings = $bookings->where('status', 'completed');
+
+            $totalGrossEarnings = $completedBookings->sum('total_price');
+            $driverNetEarnings = round($totalGrossEarnings * ($driverPct / 100));
+            $adminCommissionTotal = round($totalGrossEarnings * ($adminPct / 100));
+
+            $pendingBookingsCount = $bookings->where('status', 'pending')->count();
+            $completedTripsCount = $completedBookings->count();
+            $activeVehiclesCount = $this->profile->vehicles()->where('is_active', true)->count();
+
+            $bookingsWithSplit = $bookings->map(function ($b) use ($driverPct, $adminPct) {
+                $b->driver_amount = round($b->total_price * ($driverPct / 100));
+                $b->admin_amount = round($b->total_price * ($adminPct / 100));
+                return $b;
+            });
         }
 
         return view('livewire.partner-dashboard', [
-            'totalEarnings' => $totalEarnings,
+            'driverPct' => $driverPct,
+            'adminPct' => $adminPct,
+            'totalGrossEarnings' => $totalGrossEarnings,
+            'driverNetEarnings' => $driverNetEarnings,
+            'adminCommissionTotal' => $adminCommissionTotal,
             'pendingBookingsCount' => $pendingBookingsCount,
             'activeVehiclesCount' => $activeVehiclesCount,
+            'completedTripsCount' => $completedTripsCount,
+            'bookingsWithSplit' => $bookingsWithSplit,
         ]);
     }
 }
