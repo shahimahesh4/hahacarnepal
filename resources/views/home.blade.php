@@ -1,11 +1,8 @@
 @extends('layouts.app')
 
-@section('title', \App\Models\Setting::get('seo_meta_title', 'Hahakar - Nepal\'s #1 Car Rental Comparison & Direct Booking'))
-@section('meta_description', \App\Models\Setting::get('seo_meta_description', 'Compare car rental prices & book verified vehicles across Kathmandu, Pokhara, Chitwan, Lumbini, and all of Nepal. Scorpio 4WD, Toyota Hilux, Creta, Swift, and HiAce tourist vans with transparent NPR rates.'))
-
 @section('content')
 <!-- Hero Section with Himalayan Night Gradient -->
-<section class="relative bg-gradient-to-b from-[#070d1e] via-[#0f172a] to-[#1e293b] text-white pt-12 pb-24 sm:pt-16 sm:pb-32 overflow-hidden">
+<section class="relative bg-gradient-to-b from-[#070d1e] via-[#0f172a] to-[#1e293b] text-white pt-10 pb-12 sm:pt-14 sm:pb-16 overflow-hidden">
     <!-- Ambient Background Glows -->
     <div class="absolute inset-0 opacity-30 pointer-events-none">
         <div class="absolute -top-40 -right-40 w-[550px] h-[550px] bg-emerald-500 rounded-full blur-[150px]"></div>
@@ -14,14 +11,11 @@
     </div>
 
     <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Top Pill & Headline -->
+        <!-- Top Headline -->
         <div class="text-center max-w-5xl mx-auto mb-10 sm:mb-12">
-            <div class="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-black px-4 py-1.5 rounded-full uppercase tracking-wider mb-5 shadow-xs backdrop-blur-md">
-                <span>🇳🇵</span> NEPAL'S VEHICLE RENTAL & MOBILITY NETWORK
-            </div>
             <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-[1.15] text-white mb-5">
-                <span class="sm:whitespace-nowrap">Compare Car Rentals in Nepal.</span> <br class="hidden sm:inline">
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-300">Travel Free, Save Big.</span>
+                <span class="sm:whitespace-nowrap">{{ \App\Models\Setting::get('hero_headline_line1', 'Book & Compare Car Rentals in Nepal.') }}</span> <br class="hidden sm:inline">
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-300">{{ \App\Models\Setting::get('hero_headline_line2', 'Best Rates Guaranteed across Nepal') }}</span>
             </h1>
 
 
@@ -29,15 +23,15 @@
             <div class="mt-6 flex flex-wrap items-center justify-center gap-4 sm:gap-8 text-xs font-bold text-slate-300">
                 <div class="flex items-center gap-2 bg-slate-900/60 border border-white/10 px-3.5 py-1.5 rounded-full backdrop-blur-md">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span>Verified Nepal Fleets</span>
+                    <span>{{ \App\Models\Setting::get('hero_pill1_text', 'Verified Nepal Fleets') }}</span>
                 </div>
                 <div class="flex items-center gap-2 bg-slate-900/60 border border-white/10 px-3.5 py-1.5 rounded-full backdrop-blur-md">
                     <span class="text-emerald-400">🛡️</span>
-                    <span>Verified Drivers & Bluebooks</span>
+                    <span>{{ \App\Models\Setting::get('hero_pill2_text', 'Verified Drivers & Bluebooks') }}</span>
                 </div>
                 <div class="flex items-center gap-2 bg-slate-900/60 border border-white/10 px-3.5 py-1.5 rounded-full backdrop-blur-md">
                     <span class="text-emerald-400">🏔️</span>
-                    <span>4WD Mountain & Highway Ready</span>
+                    <span>{{ \App\Models\Setting::get('hero_pill3_text', '4WD Mountain & Highway Ready') }}</span>
                 </div>
             </div>
         </div>
@@ -72,7 +66,7 @@
         </div>
 
         <!-- Trust Badges Bar -->
-        <div class="mt-12 flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-xs font-semibold text-slate-400">
+        <div class="mt-8 sm:mt-10 flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-xs font-semibold text-slate-400">
             <div class="flex items-center gap-2">
                 <span class="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold">✓</span>
                 <span>Free cancellation on most bookings</span>
@@ -90,24 +84,24 @@
 </section>
 
 <!-- Popular Nepal Destinations Section -->
-<section class="py-16 sm:py-24 bg-gradient-to-b from-[#1e293b] via-[#0f172a] to-[#0c1527] text-white border-b border-white/10">
+<section class="py-12 sm:py-16 bg-gradient-to-b from-[#1e293b] via-[#0f172a] to-[#0c1527] text-white border-b border-white/10">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-12">
-            <div>
-                <div class="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/30 mb-2">
-                    <span>🏔️</span> TOP NEPAL ROUTES & HUBS
-                </div>
-                <h2 class="text-2xl sm:text-4xl font-black text-white mt-1">Popular Rental Destinations</h2>
+        <div class="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+            <div class="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-emerald-400 bg-emerald-500/10 px-3.5 py-1 rounded-full border border-emerald-500/30 mb-2.5">
+                <span>🏔️</span> TOP NEPAL ROUTES & HUBS
             </div>
-            <p class="text-sm font-medium text-slate-400 mt-2 sm:mt-0">Select your destination for instant rates and verified vehicles</p>
+            <h2 class="text-2xl sm:text-4xl font-black text-white tracking-tight">{{ \App\Models\Setting::get('hubs_section_title', 'Popular Nepal Car Rental Hubs') }}</h2>
+            <p class="text-sm sm:text-base font-medium text-slate-400 mt-2.5 leading-relaxed">{{ \App\Models\Setting::get('hubs_section_subtitle', 'Direct vehicle dispatch with verified local drivers or self-drive across major tourist and business hubs.') }}</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Kathmandu Card -->
             <a wire:navigate href="{{ route('search.index', ['pickup' => 1]) }}" 
                 class="group relative h-80 rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 block border border-slate-200/60">
-                <img src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80" 
+                <img src="{{ asset('images/destinations/kathmandu.jpg') }}" 
                     alt="Kathmandu Valley" 
+                    loading="lazy"
+                    decoding="async"
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
                 <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold text-emerald-400 border border-emerald-500/30">
@@ -129,8 +123,10 @@
             <!-- Pokhara Card -->
             <a wire:navigate href="{{ route('search.index', ['pickup' => 4]) }}" 
                 class="group relative h-80 rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 block border border-slate-200/60">
-                <img src="https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&w=800&q=80" 
+                <img src="{{ asset('images/destinations/pokhara.jpg') }}" 
                     alt="Pokhara Phewa Lake" 
+                    loading="lazy"
+                    decoding="async"
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
                 <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold text-emerald-400 border border-emerald-500/30">
@@ -152,8 +148,10 @@
             <!-- Chitwan Card -->
             <a wire:navigate href="{{ route('search.index', ['pickup' => 6]) }}" 
                 class="group relative h-80 rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 block border border-slate-200/60">
-                <img src="https://images.unsplash.com/photo-1581852017103-68ac6550407b?auto=format&fit=crop&w=800&q=80" 
+                <img src="{{ asset('images/destinations/chitwan.jpg') }}" 
                     alt="Chitwan National Park" 
+                    loading="lazy"
+                    decoding="async"
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
                 <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold text-emerald-400 border border-emerald-500/30">
@@ -175,8 +173,10 @@
             <!-- Lumbini Card -->
             <a wire:navigate href="{{ route('search.index', ['pickup' => 8]) }}" 
                 class="group relative h-80 rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 block border border-slate-200/60">
-                <img src="https://images.unsplash.com/photo-1605649487212-47bdab064df7?auto=format&fit=crop&w=800&q=80" 
+                <img src="{{ asset('images/destinations/lumbini.jpg') }}" 
                     alt="Lumbini Maya Devi" 
+                    loading="lazy"
+                    decoding="async"
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
                 <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold text-emerald-400 border border-emerald-500/30">
@@ -198,8 +198,10 @@
             <!-- Biratnagar Card -->
             <a wire:navigate href="{{ route('search.index', ['pickup' => 9]) }}" 
                 class="group relative h-80 rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 block border border-slate-200/60">
-                <img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=800&q=80" 
+                <img src="{{ asset('images/destinations/biratnagar.jpg') }}" 
                     alt="Biratnagar Eastern Hub" 
+                    loading="lazy"
+                    decoding="async"
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
                 <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold text-emerald-400 border border-emerald-500/30">
@@ -221,8 +223,10 @@
             <!-- Nepalgunj Card -->
             <a wire:navigate href="{{ route('search.index', ['pickup' => 10]) }}" 
                 class="group relative h-80 rounded-3xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 block border border-slate-200/60">
-                <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80" 
+                <img src="{{ asset('images/destinations/nepalgunj.jpg') }}" 
                     alt="Western Nepal Mountains" 
+                    loading="lazy"
+                    decoding="async"
                     class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                 <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent"></div>
                 <div class="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-full text-[11px] font-bold text-emerald-400 border border-emerald-500/30">
@@ -251,8 +255,8 @@
             <div class="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/30 mb-2">
                 <span>🚙</span> NEPAL FLEET CATEGORIES
             </div>
-            <h2 class="text-2xl sm:text-4xl font-black text-white mt-1">Available Vehicles in Nepal</h2>
-            <p class="text-sm font-medium text-slate-400 mt-2">Tailored for Nepali highway terrain, mountain passes, group tours, and city travel.</p>
+            <h2 class="text-2xl sm:text-4xl font-black text-white mt-1">{{ \App\Models\Setting::get('fleet_section_title', 'Nepal Vehicle Fleet & Rate Guide') }}</h2>
+            <p class="text-sm font-medium text-slate-400 mt-2">{{ \App\Models\Setting::get('fleet_section_subtitle', 'From mountain 4WDs to economical city hatchbacks and luxury tourist vans.') }}</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -260,7 +264,7 @@
             <div class="group bg-slate-900/80 rounded-3xl p-6 border border-white/10 shadow-xl hover:shadow-2xl hover:border-emerald-500/40 backdrop-blur-md transition-all duration-300 flex flex-col justify-between">
                 <div>
                     <div class="aspect-16/10 w-full flex items-center justify-center mb-4 bg-slate-950/80 rounded-2xl p-3 group-hover:bg-slate-950 border border-white/10 transition overflow-hidden">
-                        <img src="{{ asset('images/vehicles/scorpio.jpg') }}" alt="Mahindra Scorpio 4WD S11" class="h-full w-full object-contain group-hover:scale-105 transition duration-300">
+                        <img src="{{ asset('images/vehicles/scorpio.jpg') }}" alt="Mahindra Scorpio 4WD S11" loading="lazy" decoding="async" class="h-full w-full object-contain group-hover:scale-105 transition duration-300">
                     </div>
                     <span class="inline-block bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase mb-2">🏔️ Nepal #1 4x4</span>
                     <h3 class="text-lg font-black text-white">4WD Mountain SUVs</h3>
@@ -284,7 +288,7 @@
             <div class="group bg-slate-900/80 rounded-3xl p-6 border border-white/10 shadow-xl hover:shadow-2xl hover:border-emerald-500/40 backdrop-blur-md transition-all duration-300 flex flex-col justify-between">
                 <div>
                     <div class="aspect-16/10 w-full flex items-center justify-center mb-4 bg-slate-950/80 rounded-2xl p-3 group-hover:bg-slate-950 border border-white/10 transition overflow-hidden">
-                        <img src="{{ asset('images/vehicles/hiace.jpg') }}" alt="Toyota HiAce Tourist Commuter" class="h-full w-full object-contain group-hover:scale-105 transition duration-300">
+                        <img src="{{ asset('images/vehicles/hiace.jpg') }}" alt="Toyota HiAce Tourist Commuter" loading="lazy" decoding="async" class="h-full w-full object-contain group-hover:scale-105 transition duration-300">
                     </div>
                     <span class="inline-block bg-purple-500/20 text-purple-300 border border-purple-500/30 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase mb-2">🚐 Group Tour & Trek</span>
                     <h3 class="text-lg font-black text-white">HiAce Tourist Vans</h3>
@@ -308,7 +312,7 @@
             <div class="group bg-slate-900/80 rounded-3xl p-6 border border-white/10 shadow-xl hover:shadow-2xl hover:border-emerald-500/40 backdrop-blur-md transition-all duration-300 flex flex-col justify-between">
                 <div>
                     <div class="aspect-16/10 w-full flex items-center justify-center mb-4 bg-slate-950/80 rounded-2xl p-3 group-hover:bg-slate-950 border border-white/10 transition overflow-hidden">
-                        <img src="{{ asset('images/vehicles/swift.jpg') }}" alt="Suzuki Swift Hatchback" class="h-full w-full object-contain group-hover:scale-105 transition duration-300">
+                        <img src="{{ asset('images/vehicles/swift.jpg') }}" alt="Suzuki Swift Hatchback" loading="lazy" decoding="async" class="h-full w-full object-contain group-hover:scale-105 transition duration-300">
                     </div>
                     <span class="inline-block bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase mb-2">⚡ City Value</span>
                     <h3 class="text-lg font-black text-white">City Hatchbacks</h3>
@@ -332,7 +336,7 @@
             <div class="group bg-slate-900/80 rounded-3xl p-6 border border-white/10 shadow-xl hover:shadow-2xl hover:border-emerald-500/40 backdrop-blur-md transition-all duration-300 flex flex-col justify-between">
                 <div>
                     <div class="aspect-16/10 w-full flex items-center justify-center mb-4 bg-slate-950/80 rounded-2xl p-3 group-hover:bg-slate-950 border border-white/10 transition overflow-hidden">
-                        <img src="{{ asset('images/vehicles/creta.jpg') }}" alt="Hyundai Creta SX" class="h-full w-full object-contain group-hover:scale-105 transition duration-300">
+                        <img src="{{ asset('images/vehicles/creta.jpg') }}" alt="Hyundai Creta SX" loading="lazy" decoding="async" class="h-full w-full object-contain group-hover:scale-105 transition duration-300">
                     </div>
                     <span class="inline-block bg-teal-500/20 text-teal-300 border border-teal-500/30 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase mb-2">🚙 Family Comfort</span>
                     <h3 class="text-lg font-black text-white">Compact SUVs</h3>
@@ -356,7 +360,7 @@
             <div class="group bg-slate-900/80 rounded-3xl p-6 border border-white/10 shadow-xl hover:shadow-2xl hover:border-emerald-500/40 backdrop-blur-md transition-all duration-300 flex flex-col justify-between">
                 <div>
                     <div class="aspect-16/10 w-full flex items-center justify-center mb-4 bg-slate-950/80 rounded-2xl p-3 group-hover:bg-slate-950 border border-white/10 transition overflow-hidden">
-                        <img src="{{ asset('images/vehicles/byd_atto3.jpg') }}" alt="BYD Atto 3 Electric SUV (EV)" class="h-full w-full object-contain group-hover:scale-105 transition duration-300">
+                        <img src="{{ asset('images/vehicles/byd_atto3.jpg') }}" alt="BYD Atto 3 Electric SUV (EV)" loading="lazy" decoding="async" class="h-full w-full object-contain group-hover:scale-105 transition duration-300">
                     </div>
                     <span class="inline-block bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase mb-2">🌱 100% Electric EV</span>
                     <h3 class="text-lg font-black text-white">Electric SUVs (EV)</h3>
@@ -380,7 +384,7 @@
             <div class="group bg-slate-900/80 rounded-3xl p-6 border border-white/10 shadow-xl hover:shadow-2xl hover:border-emerald-500/40 backdrop-blur-md transition-all duration-300 flex flex-col justify-between">
                 <div>
                     <div class="aspect-16/10 w-full flex items-center justify-center mb-4 bg-slate-950/80 rounded-2xl p-3 group-hover:bg-slate-950 border border-white/10 transition overflow-hidden">
-                        <img src="{{ asset('images/vehicles/prado.jpg') }}" alt="Toyota Land Cruiser Prado TX" class="h-full w-full object-contain group-hover:scale-105 transition duration-300">
+                        <img src="{{ asset('images/vehicles/prado.jpg') }}" alt="Toyota Land Cruiser Prado TX" loading="lazy" decoding="async" class="h-full w-full object-contain group-hover:scale-105 transition duration-300">
                     </div>
                     <span class="inline-block bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase mb-2">👑 VIP Luxury 4x4</span>
                     <h3 class="text-lg font-black text-white">Luxury Prado / 4WD</h3>
@@ -410,8 +414,8 @@
             <div class="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-emerald-400 bg-emerald-500/10 px-3 py-1 rounded-full border border-emerald-500/30 mb-2">
                 <span>🧭</span> EASY & TRANSPARENT
             </div>
-            <h2 class="text-2xl sm:text-4xl font-black text-white mt-1">How Hahakar Works</h2>
-            <p class="text-sm font-medium text-slate-400 mt-2">Connecting you directly to Nepal's top car rental fleets in 3 simple steps.</p>
+            <h2 class="text-2xl sm:text-4xl font-black text-white mt-1">{{ \App\Models\Setting::get('trust_section_title', 'How Hahakar Works') }}</h2>
+            <p class="text-sm font-medium text-slate-400 mt-2">{{ \App\Models\Setting::get('trust_section_subtitle', "Connecting you directly to Nepal's top car rental fleets in 3 simple steps.") }}</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
@@ -464,11 +468,10 @@
                     Partner Driver & Fleet Network
                 </span>
                 <h2 class="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
-                    Own a Car or Drive in Nepal? <br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">Partner & Earn with Hahakar.</span>
+                    {{ \App\Models\Setting::get('partner_cta_title', 'Own a Car or Drive in Nepal? Partner & Earn with Hahakar.') }}
                 </h2>
                 <p class="text-sm sm:text-base text-slate-300 leading-relaxed max-w-xl">
-                    List your <strong>Mahindra Scorpio 4WD</strong>, <strong>Toyota Hilux</strong>, <strong>HiAce Tourist Van</strong>, <strong>Creta</strong>, <strong>Swift</strong>, or <strong>EV</strong> on Hahakar. Our team verifies your license and bluebook to connect you directly with travelers across Nepal.
+                    {{ \App\Models\Setting::get('partner_cta_desc', 'List your Mahindra Scorpio 4WD, Toyota Hilux, HiAce Tourist Van, Creta, Swift, or EV on Hahakar. Our team verifies your license and bluebook to connect you directly with travelers across Nepal.') }}
                 </p>
 
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
@@ -492,7 +495,7 @@
                         href="{{ route('partner.register') }}"
                         class="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-slate-950 font-black text-sm shadow-xl shadow-emerald-500/25 transition duration-200"
                     >
-                        List Your Vehicle Now ➔
+                        {{ \App\Models\Setting::get('partner_cta_button_text', 'List Your Vehicle Now ➔') }}
                     </a>
                     <a
                         wire:navigate
@@ -574,8 +577,8 @@
             <div class="inline-flex items-center gap-1.5 text-xs font-extrabold uppercase tracking-widest text-emerald-600 bg-emerald-100/60 px-3 py-1 rounded-full border border-emerald-200 mb-2">
                 <span>💬</span> FREQUENTLY ASKED
             </div>
-            <h2 class="text-2xl sm:text-4xl font-black text-slate-900 mt-1">Nepal Car Rental FAQs</h2>
-            <p class="text-sm text-slate-600 mt-2">Everything you need to know about renting a car, hiring drivers, and road travel in Nepal.</p>
+            <h2 class="text-2xl sm:text-4xl font-black text-slate-900 mt-1">{{ \App\Models\Setting::get('faq_section_title', 'Nepal Car Rental FAQs') }}</h2>
+            <p class="text-sm text-slate-600 mt-2">{{ \App\Models\Setting::get('faq_section_subtitle', 'Everything you need to know about renting a car, hiring drivers, and road travel in Nepal.') }}</p>
         </div>
 
         <div class="space-y-4">

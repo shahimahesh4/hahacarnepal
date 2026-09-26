@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Subscriber;
+use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Component;
 
 class NewsletterForm extends Component
@@ -16,7 +17,17 @@ class NewsletterForm extends Component
 
     public function subscribe(): void
     {
+        $throttleKey = 'newsletter-subscribe:' . request()->ip();
+
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+            $this->addError('email', "Too many subscription attempts. Please wait {$seconds} seconds.");
+            return;
+        }
+
         $this->validate();
+
+        RateLimiter::hit($throttleKey, 60);
 
         Subscriber::updateOrCreate(
             ['email' => strtolower(trim($this->email))],

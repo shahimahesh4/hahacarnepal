@@ -6,6 +6,7 @@ use App\Domain\Alerts\Actions\CreatePriceAlertAction;
 use App\Domain\Search\Data\SearchCriteria;
 use App\Models\Location;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Component;
 
 class PriceAlertModal extends Component
@@ -47,7 +48,16 @@ class PriceAlertModal extends Component
 
     public function createAlert(CreatePriceAlertAction $action): void
     {
+        $throttleKey = 'price-alert:' . request()->ip();
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+            $this->addError('email', "Too many alert requests. Please wait {$seconds} seconds.");
+            return;
+        }
+
         $this->validate();
+
+        RateLimiter::hit($throttleKey, 120);
 
         $pickupLoc = Location::findOrFail($this->pickupLocationId);
         $dropoffLoc = Location::findOrFail($this->dropoffLocationId);
@@ -60,7 +70,7 @@ class PriceAlertModal extends Component
         );
 
         $action->execute(
-            email: $this->email,
+            email: strtolower(trim($this->email)),
             criteria: $criteria,
             thresholdType: $this->thresholdType,
             thresholdValue: (float) $this->thresholdValue,

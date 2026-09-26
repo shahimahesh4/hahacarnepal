@@ -7,6 +7,7 @@ use App\Models\PriceAlert;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Component;
 
 class CustomerDashboard extends Component
@@ -47,12 +48,25 @@ class CustomerDashboard extends Component
         $this->activeTab = $tab;
     }
 
+    protected function ensureUser(): ?User
+    {
+        if (!Auth::check()) {
+            redirect()->route('customer.login');
+            return null;
+        }
+        $this->user = Auth::user();
+        return $this->user;
+    }
+
     public function viewBooking(int $bookingId): void
     {
+        $user = $this->ensureUser();
+        if (!$user) return;
+
         $this->selectedBooking = Booking::with(['vehicle', 'driverProfile.user'])
-            ->where(function ($q) {
-                $q->where('customer_id', $this->user->id)
-                  ->orWhere('customer_email', $this->user->email);
+            ->where(function ($q) use ($user) {
+                $q->where('customer_id', $user->id)
+                  ->orWhere('customer_email', $user->email);
             })
             ->findOrFail($bookingId);
 
@@ -67,9 +81,12 @@ class CustomerDashboard extends Component
 
     public function cancelBooking(int $bookingId): void
     {
-        $booking = Booking::where(function ($q) {
-            $q->where('customer_id', $this->user->id)
-              ->orWhere('customer_email', $this->user->email);
+        $user = $this->ensureUser();
+        if (!$user) return;
+
+        $booking = Booking::where(function ($q) use ($user) {
+            $q->where('customer_id', $user->id)
+              ->orWhere('customer_email', $user->email);
         })
         ->where('status', 'pending')
         ->findOrFail($bookingId);
@@ -88,14 +105,17 @@ class CustomerDashboard extends Component
 
     public function updateProfile(): void
     {
+        $user = $this->ensureUser();
+        if (!$user) return;
+
         $this->validate([
             'profileName' => 'required|string|min:2|max:100',
             'profilePhone' => 'required|string|min:8|max:20',
         ]);
 
-        $this->user->update([
-            'name' => $this->profileName,
-            'phone' => $this->profilePhone,
+        $user->update([
+            'name' => trim($this->profileName),
+            'phone' => trim($this->profilePhone),
         ]);
 
         $this->profileSuccessMessage = 'Profile information updated successfully!';
@@ -103,17 +123,30 @@ class CustomerDashboard extends Component
 
     public function updatePassword(): void
     {
+        $user = $this->ensureUser();
+        if (!$user) return;
+
+        $throttleKey = 'customer-password-update:' . $user->id;
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+            $this->addError('currentPassword', "Too many attempts. Please try again in {$seconds} seconds.");
+            return;
+        }
+
         $this->validate([
             'currentPassword' => 'required',
             'newPassword' => 'required|string|min:6|confirmed',
         ]);
 
-        if (!Hash::check($this->currentPassword, $this->user->password)) {
+        if (!Hash::check($this->currentPassword, $user->password)) {
+            RateLimiter::hit($throttleKey, 300);
             $this->addError('currentPassword', 'The current password provided is incorrect.');
             return;
         }
 
-        $this->user->update([
+        RateLimiter::clear($throttleKey);
+
+        $user->update([
             'password' => Hash::make($this->newPassword),
         ]);
 
@@ -123,9 +156,12 @@ class CustomerDashboard extends Component
 
     public function unsubscribeAlert(int $alertId): void
     {
-        $alert = PriceAlert::where(function ($q) {
-            $q->where('email', $this->user->email)
-              ->orWhere('user_id', $this->user->id);
+        $user = $this->ensureUser();
+        if (!$user) return;
+
+        $alert = PriceAlert::where(function ($q) use ($user) {
+            $q->where('email', $user->email)
+              ->orWhere('user_id', $user->id);
         })->find($alertId);
 
         if ($alert) {

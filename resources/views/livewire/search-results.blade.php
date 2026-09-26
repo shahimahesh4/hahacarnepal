@@ -183,7 +183,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:gap-8 items-start">
             <!-- Desktop Sidebar Filters -->
-            <div class="hidden lg:block lg:col-span-1 space-y-6">
+            <div class="hidden lg:block lg:col-span-1 space-y-6 lg:sticky lg:top-36 lg:max-h-[calc(100vh-10rem)] lg:overflow-y-auto pb-8 overscroll-contain no-scrollbar">
                 <div class="bg-white rounded-3xl shadow-sm border border-slate-200/80 p-6 space-y-6">
                     <div class="flex items-center justify-between pb-4 border-b border-slate-100">
                         <h2 class="font-black text-slate-900 text-base flex items-center gap-2">
@@ -312,6 +312,8 @@
                                     <div class="w-full aspect-16/10 flex items-center justify-center bg-gradient-to-br from-slate-50 via-slate-100/60 to-slate-50 border border-slate-200/80 rounded-2xl p-3.5 mb-3 shadow-2xs overflow-hidden">
                                         <img src="{{ $offer->vehicle_image_url ? asset($offer->vehicle_image_url) : asset('images/vehicles/scorpio.jpg') }}" 
                                             alt="{{ $offer->vehicle_name }}" 
+                                            loading="lazy"
+                                            decoding="async"
                                             class="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300">
                                     </div>
                                     <span class="inline-block bg-slate-100 text-slate-700 text-xs font-bold px-3 py-1 rounded-full">

@@ -11,9 +11,11 @@ Route::get('/', function () {
 })->name('home');
 
 // Direct Vehicle Booking (SIXT-style direct rental with chauffeur/self-drive)
-Route::get('/book', function () {
+Route::get('/book-vehicle', function () {
     return view('book');
 })->name('book.index');
+
+Route::redirect('/book', '/book-vehicle');
 
 Route::get('/booking/{reference}', function ($reference) {
     return view('booking-show', ['reference' => $reference]);
@@ -56,9 +58,10 @@ Route::get('/search', function () {
 // Signed Outbound Partner Redirect with Attribution
 Route::get('/go/{offer}', RedirectController::class)->name('go.redirect');
 
-// Price Alerts
+// Price Alerts & Newsletters
 Route::get('/alerts/confirm/{token}', [AlertController::class, 'confirm'])->name('alerts.confirm');
 Route::get('/alerts/unsubscribe/{token}', [AlertController::class, 'unsubscribe'])->name('alerts.unsubscribe');
+Route::get('/newsletter/unsubscribe', [\App\Http\Controllers\NewsletterController::class, 'unsubscribe'])->name('newsletter.unsubscribe');
 
 // Support & FAQs
 Route::get('/contact', function () {

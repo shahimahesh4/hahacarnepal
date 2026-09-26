@@ -7,8 +7,9 @@
 <!-- Hero Section -->
 <div class="relative bg-gradient-to-b from-[#0b1329] to-[#0f172a] border-b border-white/10 text-white py-12 sm:py-16">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-3">
-            <span>🇳🇵</span> 24/7 Roadside & Customer Desk
+        <span class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-3">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>24/7 Roadside & Customer Desk</span>
         </span>
         <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white mb-3">We're Here to Help</h1>
         <p class="text-slate-300 max-w-xl mx-auto text-sm leading-relaxed">

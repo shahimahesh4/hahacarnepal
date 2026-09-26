@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Booking;
 use App\Models\Vehicle;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Component;
 
 class DirectVehicleBooking extends Component
@@ -96,7 +97,7 @@ class DirectVehicleBooking extends Component
     {
         $this->recalculateDistance();
         $this->hasSearched = true;
-        $mode = $this->serviceOption === 'with_driver' ? 'Chauffeur' : 'Self-Drive';
+        $mode = $this->serviceOption === 'with_driver' ? 'With-Driver' : 'Self-Drive';
         $duration = $this->pricingType === 'daily' ? "{$this->totalDays} Days" : "{$this->estimatedDistanceKm} KM";
         $this->searchMessage = "Showing verified {$mode} fleet for {$this->pickupLocation} ({$duration})";
         $this->dispatch('scroll-to-fleet');
@@ -136,12 +137,21 @@ class DirectVehicleBooking extends Component
 
     public function confirmBooking()
     {
+        $throttleKey = 'direct-booking:' . request()->ip();
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+            $this->addError('customerEmail', "Too many booking submissions. Please wait {$seconds} seconds.");
+            return;
+        }
+
         $this->validate([
             'customerName' => 'required|string|min:2|max:100',
             'customerPhone' => 'required|string|min:8|max:20',
             'customerEmail' => 'required|email|max:100',
             'paymentMethod' => 'required|in:cash,esewa,khalti',
         ]);
+
+        RateLimiter::hit($throttleKey, 120);
 
         $vehicle = Vehicle::with('driverProfile')->findOrFail($this->selectedVehicleId);
         $totalDays = $this->totalDays;
@@ -166,9 +176,9 @@ class DirectVehicleBooking extends Component
             'vehicle_id' => $vehicle->id,
             'driver_profile_id' => $vehicle->driver_profile_id,
             'customer_id' => auth()->check() ? auth()->id() : null,
-            'customer_name' => $this->customerName,
-            'customer_phone' => $this->customerPhone,
-            'customer_email' => $this->customerEmail,
+            'customer_name' => trim($this->customerName),
+            'customer_phone' => trim($this->customerPhone),
+            'customer_email' => strtolower(trim($this->customerEmail)),
             'service_option' => $this->serviceOption,
             'pricing_type' => $this->pricingType,
             'estimated_distance_km' => $this->pricingType === 'distance' ? $this->estimatedDistanceKm : null,

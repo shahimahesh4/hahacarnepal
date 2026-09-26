@@ -15,7 +15,7 @@ class AdminPartnerVerificationTest extends TestCase
     public function test_admin_can_verify_pending_driver_partner(): void
     {
         $admin = User::factory()->create([
-            'email' => 'admin@hahacar.com',
+            'email' => 'admin@hahakar.com',
             'role' => 'admin',
             'status' => 'active',
         ]);
@@ -70,7 +70,7 @@ class AdminPartnerVerificationTest extends TestCase
         ]);
 
         // Now vehicle should be visible on public direct booking page
-        $bookResponse = $this->get('/book');
+        $bookResponse = $this->get('/book-vehicle');
         $bookResponse->assertStatus(200);
         $bookResponse->assertSee('Mahindra Scorpio 4WD');
     }

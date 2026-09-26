@@ -6,6 +6,7 @@ use App\Models\DriverProfile;
 use App\Models\User;
 use App\Models\Vehicle;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -21,13 +22,17 @@ class PartnerRegistration extends Component
     public string $email = '';
     public string $phone = '';
     public string $password = '';
+    public string $province = 'Bagmati Province';
     public string $serviceCity = 'Kathmandu';
+    public string $address = '';
     public string $partnerType = 'individual_driver';
 
     // Step 2: Documents
     public string $licenseNumber = '';
     public $licensePhoto = null;
     public $bluebookPhoto = null;
+    public $citizenshipPhoto = null;
+    public $passportPhoto = null;
 
     // Step 3: Vehicle Info
     public string $vehicleCategory = 'suv_4wd';
@@ -54,15 +59,19 @@ class PartnerRegistration extends Component
                 'email' => 'required|email|max:100|unique:users,email',
                 'phone' => 'required|string|min:8|max:20',
                 'password' => 'required|string|min:6',
-                'serviceCity' => 'required|string',
+                'province' => 'required|string|max:100',
+                'serviceCity' => 'required|string|max:100',
+                'address' => 'nullable|string|max:255',
                 'partnerType' => 'required|in:individual_driver,vehicle_owner,fleet_operator',
             ]);
             $this->step = 2;
         } elseif ($this->step === 2) {
             $this->validate([
-                'licenseNumber' => 'required|string|min:5',
-                'licensePhoto' => 'nullable|image|max:5120',
-                'bluebookPhoto' => 'nullable|image|max:5120',
+                'licenseNumber' => 'required|string|min:4|max:50',
+                'licensePhoto' => 'nullable|file|mimes:jpeg,png,webp,jpg,pdf|max:5120',
+                'bluebookPhoto' => 'nullable|file|mimes:jpeg,png,webp,jpg,pdf|max:5120',
+                'citizenshipPhoto' => 'nullable|file|mimes:jpeg,png,webp,jpg,pdf|max:5120',
+                'passportPhoto' => 'nullable|file|mimes:jpeg,png,webp,jpg,pdf|max:5120',
             ]);
             $this->step = 3;
         }
@@ -77,13 +86,38 @@ class PartnerRegistration extends Component
 
     public function submitApplication(): void
     {
+        $throttleKey = 'partner-register:' . request()->ip();
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+            $this->addError('plateNumber', "Too many registration attempts. Please wait {$seconds} seconds.");
+            return;
+        }
+
         $this->validate([
+            // Step 1 re-validation
+            'name' => 'required|string|min:2|max:100',
+            'email' => 'required|email|max:100|unique:users,email',
+            'phone' => 'required|string|min:8|max:20',
+            'password' => 'required|string|min:6',
+            'province' => 'required|string|max:100',
+            'serviceCity' => 'required|string|max:100',
+            'partnerType' => 'required|in:individual_driver,vehicle_owner,fleet_operator',
+            // Step 2 re-validation
+            'licenseNumber' => 'required|string|min:4|max:50',
+            'licensePhoto' => 'nullable|file|mimes:jpeg,png,webp,jpg,pdf|max:5120',
+            'bluebookPhoto' => 'nullable|file|mimes:jpeg,png,webp,jpg,pdf|max:5120',
+            'citizenshipPhoto' => 'nullable|file|mimes:jpeg,png,webp,jpg,pdf|max:5120',
+            'passportPhoto' => 'nullable|file|mimes:jpeg,png,webp,jpg,pdf|max:5120',
+            // Step 3 validation
             'vehicleMake' => 'required|string|max:50',
             'vehicleModel' => 'required|string|max:50',
+            'vehicleYear' => 'required|integer|min:2000|max:' . (date('Y') + 1),
             'plateNumber' => 'required|string|max:30|unique:vehicles,plate_number',
             'dailyRate' => 'required|numeric|min:500',
-            'vehiclePhoto' => 'nullable|image|max:5120',
+            'vehiclePhoto' => 'nullable|file|mimes:jpeg,png,webp,jpg|max:5120',
         ]);
+
+        RateLimiter::hit($throttleKey, 600);
 
         $licensePath = null;
         if ($this->licensePhoto) {
@@ -95,15 +129,25 @@ class PartnerRegistration extends Component
             $bluebookPath = $this->bluebookPhoto->store('uploads/bluebooks', 'public');
         }
 
+        $citizenshipPath = null;
+        if ($this->citizenshipPhoto) {
+            $citizenshipPath = $this->citizenshipPhoto->store('uploads/citizenships', 'public');
+        }
+
+        $passportPath = null;
+        if ($this->passportPhoto) {
+            $passportPath = $this->passportPhoto->store('uploads/passports', 'public');
+        }
+
         $vehiclePhotoPath = null;
         if ($this->vehiclePhoto) {
             $vehiclePhotoPath = $this->vehiclePhoto->store('uploads/vehicles', 'public');
         }
 
         $user = User::create([
-            'name' => $this->name,
-            'email' => $this->email,
-            'phone' => $this->phone,
+            'name' => trim($this->name),
+            'email' => strtolower(trim($this->email)),
+            'phone' => trim($this->phone),
             'password' => Hash::make($this->password),
             'role' => 'driver',
             'status' => 'active',
@@ -113,11 +157,15 @@ class PartnerRegistration extends Component
             'user_id' => $user->id,
             'partner_type' => $this->partnerType,
             'status' => 'pending', // Pending Admin Verification
+            'province' => $this->province,
             'service_city' => $this->serviceCity,
+            'current_address' => $this->address ? trim($this->address) : null,
             'service_area' => 'Nepal',
-            'license_number' => $this->licenseNumber,
+            'license_number' => trim($this->licenseNumber),
             'license_photo_path' => $licensePath,
             'bluebook_photo_path' => $bluebookPath,
+            'citizenship_photo_path' => $citizenshipPath,
+            'passport_photo_path' => $passportPath,
             'rating' => 5.00,
             'total_bookings' => 0,
         ]);
@@ -125,10 +173,10 @@ class PartnerRegistration extends Component
         Vehicle::create([
             'driver_profile_id' => $profile->id,
             'category' => $this->vehicleCategory,
-            'make' => $this->vehicleMake,
-            'model' => $this->vehicleModel,
+            'make' => trim($this->vehicleMake),
+            'model' => trim($this->vehicleModel),
             'year' => $this->vehicleYear,
-            'plate_number' => $this->plateNumber,
+            'plate_number' => trim($this->plateNumber),
             'seating_capacity' => $this->seatingCapacity,
             'luggage_capacity' => $this->luggageCapacity,
             'transmission' => $this->transmission,

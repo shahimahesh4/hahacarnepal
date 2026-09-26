@@ -29,4 +29,23 @@ class Setting extends Model
             ['value' => $value, 'group' => $group, 'description' => $description]
         );
     }
+
+    public static function getLogoUrl(): string
+    {
+        $logo = static::get('site_logo');
+        if (!empty($logo)) {
+            return str_starts_with($logo, 'http') ? $logo : asset('storage/' . ltrim($logo, '/'));
+        }
+        return asset('images/logo.png');
+    }
+
+    public static function getFaviconUrl(): string
+    {
+        $favicon = static::get('site_favicon');
+        if (!empty($favicon)) {
+            return str_starts_with($favicon, 'http') ? $favicon : asset('storage/' . ltrim($favicon, '/'));
+        }
+        return asset('images/logo.png');
+    }
 }
+

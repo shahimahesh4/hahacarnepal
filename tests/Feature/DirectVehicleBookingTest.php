@@ -56,10 +56,13 @@ class DirectVehicleBookingTest extends TestCase
 
     public function test_book_page_loads_successfully(): void
     {
-        $response = $this->get('/book');
+        $response = $this->get('/book-vehicle');
         $response->assertStatus(200);
         $response->assertSee('Direct Vehicle Booking in Nepal');
         $response->assertSee('Mahindra Scorpio 4WD S11');
+
+        $redirectResponse = $this->get('/book');
+        $redirectResponse->assertRedirect('/book-vehicle');
     }
 
     public function test_customer_can_book_vehicle_directly(): void

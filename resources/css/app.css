@@ -156,3 +156,37 @@
     font-size: 0.875em;
     font-family: monospace;
 }
+
+/* Hide native browser password reveal and clear buttons (Edge, IE, Safari, Chrome) */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear {
+    display: none !important;
+}
+input[type="password"]::-webkit-contacts-auto-fill-button,
+input[type="password"]::-webkit-credentials-auto-fill-button {
+    visibility: hidden;
+    position: absolute;
+    right: 0;
+}
+
+/* Auth & Form Input Icon Padding Clearance */
+.input-with-left-icon {
+    padding-left: 3.5rem !important; /* 56px */
+}
+.input-with-both-icons {
+    padding-left: 3.5rem !important; /* 56px */
+    padding-right: 3.5rem !important; /* 56px */
+}
+.input-with-right-icon {
+    padding-right: 3.5rem !important; /* 56px */
+}
+
+/* Hide scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+.no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+

@@ -19,6 +19,7 @@ class Vehicle extends Model
         'model',
         'year',
         'plate_number',
+        'show_plate_number',
         'seating_capacity',
         'luggage_capacity',
         'transmission',
@@ -38,6 +39,7 @@ class Vehicle extends Model
     {
         return [
             'year' => 'integer',
+            'show_plate_number' => 'boolean',
             'seating_capacity' => 'integer',
             'luggage_capacity' => 'integer',
             'has_ac' => 'boolean',
@@ -119,4 +121,28 @@ class Vehicle extends Model
             default => ucfirst(str_replace('_', ' ', $this->category)),
         };
     }
+
+    public function getPhotoUrlAttribute(): string
+    {
+        if ($this->vehicle_photo_path) {
+            if (str_starts_with($this->vehicle_photo_path, 'http')) {
+                return $this->vehicle_photo_path;
+            }
+            $cleanPath = ltrim($this->vehicle_photo_path, '/');
+            if (file_exists(public_path('storage/' . $cleanPath))) {
+                return asset('storage/' . $cleanPath);
+            }
+            if (file_exists(public_path($cleanPath))) {
+                return asset($cleanPath);
+            }
+            return asset('storage/' . $cleanPath);
+        }
+
+        return match ($this->category) {
+            'tourist_van' => asset('images/vehicles/hiace.jpg'),
+            'compact_suv', 'sedan', 'hatchback' => asset('images/vehicles/creta.jpg'),
+            default => asset('images/vehicles/scorpio.jpg'),
+        };
+    }
 }
+

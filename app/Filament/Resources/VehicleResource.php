@@ -53,6 +53,10 @@ class VehicleResource extends Resource
                             ->required()
                             ->unique(ignoreRecord: true)
                             ->placeholder('e.g. Ba 2 Cha 4521'),
+                        Forms\Components\Toggle::make('show_plate_number')
+                            ->label('Show Plate Number in Frontend')
+                            ->helperText('Enable to display the license plate publicly on frontend search and vehicle cards. Default is hidden.')
+                            ->default(false),
                     ])->columns(2),
 
                 Forms\Components\Section::make('Specifications & Features')
@@ -154,6 +158,10 @@ class VehicleResource extends Resource
                 Tables\Columns\TextColumn::make('plate_number')
                     ->label('Plate No.')
                     ->searchable(),
+                Tables\Columns\IconColumn::make('show_plate_number')
+                    ->label('Public Plate')
+                    ->boolean()
+                    ->toggleable(),
                 Tables\Columns\TextColumn::make('driverProfile.user.name')
                     ->label('Owner / Partner')
                     ->searchable(),

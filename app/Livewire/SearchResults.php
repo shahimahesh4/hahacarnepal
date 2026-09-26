@@ -9,6 +9,7 @@ use App\Models\Offer;
 use App\Models\Search;
 use App\Models\VehicleCategory;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 
@@ -80,12 +81,21 @@ class SearchResults extends Component
 
     public function confirmBooking()
     {
+        $throttleKey = 'search-booking:' . request()->ip();
+        if (RateLimiter::tooManyAttempts($throttleKey, 5)) {
+            $seconds = RateLimiter::availableIn($throttleKey);
+            $this->addError('customerEmail', "Too many booking requests. Please wait {$seconds} seconds.");
+            return;
+        }
+
         $this->validate([
             'customerName' => 'required|string|min:2|max:100',
             'customerPhone' => 'required|string|min:8|max:20',
             'customerEmail' => 'required|email|max:100',
             'paymentMethod' => 'required|in:cash,esewa,khalti',
         ]);
+
+        RateLimiter::hit($throttleKey, 120);
 
         $offer = Offer::with(['search.pickupLocation', 'search.dropoffLocation'])->findOrFail($this->selectedOfferId);
 
@@ -143,9 +153,9 @@ class SearchResults extends Component
             'vehicle_id' => $vehicle->id,
             'driver_profile_id' => $vehicle->driver_profile_id,
             'customer_id' => auth()->check() ? auth()->id() : null,
-            'customer_name' => $this->customerName,
-            'customer_phone' => $this->customerPhone,
-            'customer_email' => $this->customerEmail,
+            'customer_name' => trim($this->customerName),
+            'customer_phone' => trim($this->customerPhone),
+            'customer_email' => strtolower(trim($this->customerEmail)),
             'service_option' => $this->serviceOption,
             'pickup_location' => $pickupLoc,
             'return_location' => $dropoffLoc,

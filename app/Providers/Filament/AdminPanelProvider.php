@@ -28,9 +28,9 @@ class AdminPanelProvider extends PanelProvider
             ->path('stnapanel')
             ->login()
             ->brandName('Hahakar Operations')
-            ->brandLogo(asset('images/logo.png'))
+            ->brandLogo(fn () => \App\Models\Setting::getLogoUrl())
             ->brandLogoHeight('2.75rem')
-            ->favicon(asset('images/logo.png'))
+            ->favicon(fn () => \App\Models\Setting::getFaviconUrl())
             ->colors([
                 'primary' => Color::Emerald,
             ])
@@ -44,6 +44,10 @@ class AdminPanelProvider extends PanelProvider
             ->renderHook(
                 \Filament\View\PanelsRenderHook::USER_MENU_BEFORE,
                 fn (): string => \Illuminate\Support\Facades\Blade::render("@include('filament.hooks.topbar-header')")
+            )
+            ->renderHook(
+                \Filament\View\PanelsRenderHook::HEAD_END,
+                fn (): string => \Illuminate\Support\Facades\Blade::render("@include('filament.hooks.sidebar-custom-styles')")
             )
             ->middleware([
                 EncryptCookies::class,

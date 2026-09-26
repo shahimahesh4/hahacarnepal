@@ -63,7 +63,7 @@
                 <label class="flex items-start gap-3 cursor-pointer text-xs text-slate-600">
                     <input type="checkbox" wire:model="privacyConsent" class="mt-0.5 rounded text-emerald-600 focus:ring-emerald-500 border-slate-300">
                     <span>
-                        I agree to the <a href="{{ route('pages.show', 'privacy-policy') }}" target="_blank" class="text-emerald-700 font-bold underline">Privacy Policy</a> and authorize Hahakar Nepal to contact me regarding this inquiry.
+                        I agree to the <a href="{{ route('pages.show', 'privacy') }}" target="_blank" class="text-emerald-700 font-bold underline">Privacy Policy</a> and authorize Hahakar Nepal to contact me regarding this inquiry.
                     </span>
                 </label>
                 @error('privacyConsent') <span class="text-xs text-rose-600 font-semibold mt-1 block">{{ $message }}</span> @enderror

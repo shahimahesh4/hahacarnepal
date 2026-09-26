@@ -23,7 +23,7 @@ class RedirectAttributionService
             ->firstOrFail();
 
         // Sub-ID and attribution capture
-        $subId = $request->query('sub_id') ?? 'hahacar_' . Str::random(8);
+        $subId = $request->query('sub_id') ?? 'hahakar_' . Str::random(8);
         $utmSource = $request->query('utm_source') ?? $request->cookie('utm_source');
         $utmMedium = $request->query('utm_medium') ?? $request->cookie('utm_medium');
         $utmCampaign = $request->query('utm_campaign') ?? $request->cookie('utm_campaign');

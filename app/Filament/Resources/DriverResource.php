@@ -45,9 +45,23 @@ class DriverResource extends Resource
                                 'suspended' => 'Suspended',
                             ])
                             ->required(),
+                        Forms\Components\Select::make('province')
+                            ->options([
+                                'Koshi Province' => 'Koshi Province',
+                                'Madhesh Province' => 'Madhesh Province',
+                                'Bagmati Province' => 'Bagmati Province',
+                                'Gandaki Province' => 'Gandaki Province',
+                                'Lumbini Province' => 'Lumbini Province',
+                                'Karnali Province' => 'Karnali Province',
+                                'Sudurpashchim Province' => 'Sudurpashchim Province',
+                            ]),
                         Forms\Components\TextInput::make('service_city')
+                            ->label('City')
                             ->required()
                             ->placeholder('e.g. Kathmandu, Pokhara, Chitwan'),
+                        Forms\Components\TextInput::make('current_address')
+                            ->label('Address')
+                            ->placeholder('e.g. Ward 4, Baluwatar'),
                         Forms\Components\TextInput::make('service_area')
                             ->placeholder('e.g. Bagmati Province, All Nepal'),
                         Forms\Components\TextInput::make('license_number')
@@ -68,7 +82,11 @@ class DriverResource extends Resource
                             ->label('Citizenship / NID Photo')
                             ->image()
                             ->directory('uploads/citizenships'),
-                    ])->columns(3),
+                        Forms\Components\FileUpload::make('passport_photo_path')
+                            ->label('Passport Size Photo')
+                            ->image()
+                            ->directory('uploads/passports'),
+                    ])->columns(4),
 
                 Forms\Components\Section::make('Performance & Admin Notes')
                     ->schema([

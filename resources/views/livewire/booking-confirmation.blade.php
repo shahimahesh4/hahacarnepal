@@ -27,7 +27,7 @@
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <div>
                     <div class="flex items-center gap-3 mb-2">
-                        <img src="{{ asset('images/logo.png') }}" alt="Hahakar Nepal" class="h-12 sm:h-14 w-auto object-contain bg-white rounded-2xl px-3 py-1 shadow-md">
+                        <img src="{{ \App\Models\Setting::getLogoUrl() }}" alt="{{ \App\Models\Setting::get('site_name', 'Hahakar Nepal') }}" class="h-12 sm:h-14 w-auto object-contain bg-white rounded-2xl px-3 py-1 shadow-md">
                         <span class="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-semibold border border-emerald-500/30 uppercase tracking-wider text-[10px]">Verified Voucher</span>
                     </div>
                     <h1 class="text-2xl font-black text-white">Booking Confirmation Voucher</h1>
@@ -73,7 +73,7 @@
                 <!-- Vehicle -->
                 <div class="flex items-start gap-4">
                     <img
-                        src="{{ $booking->vehicle->vehicle_photo_path ? asset($booking->vehicle->vehicle_photo_path) : asset('images/vehicles/scorpio.jpg') }}"
+                        src="{{ $booking->vehicle->photo_url }}"
                         alt="{{ $booking->vehicle->title }}"
                         class="w-28 h-20 rounded-2xl object-contain bg-slate-900/90 p-1.5 border border-white/10 shrink-0"
                     />
@@ -85,7 +85,7 @@
                         </p>
                         <div class="mt-2 inline-flex items-center gap-2 text-xs text-emerald-300">
                             <span class="px-2 py-0.5 rounded bg-emerald-500/20 font-semibold text-[10px]">
-                                {{ $booking->service_option === 'with_driver' ? '👔 CHAUFFEUR INCLUDED' : '🔑 SELF-DRIVE' }}
+                                {{ $booking->service_option === 'with_driver' ? '👔 DRIVER INCLUDED' : '🔑 SELF-DRIVE' }}
                             </span>
                             @if ($booking->vehicle->has_4wd)
                                 <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-semibold text-[10px]">4WD</span>

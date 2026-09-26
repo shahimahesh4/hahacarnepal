@@ -7,8 +7,9 @@
 <!-- Hero Section -->
 <div class="relative bg-gradient-to-b from-[#0b1329] to-[#0f172a] border-b border-white/10 text-white py-12 sm:py-16">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-4">
-            <span>🇳🇵</span> Hahakar Legal & Policy Center
+        <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-4">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Hahakar Legal & Policy Center</span>
         </div>
         <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-white mb-3">{{ $page->title }}</h1>
         <div class="text-xs text-slate-400 flex flex-wrap items-center gap-3">
